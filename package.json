@@ -8,7 +8,12 @@
     "dev": "vite",
     "build": "tsc -b && vite build && node scripts/prerender.mjs",
     "preview": "vite preview",
-    "typecheck": "tsc -b"
+    "typecheck": "tsc -b",
+    "lint": "eslint . --max-warnings 0",
+    "check:assets": "node scripts/check-assets.mjs",
+    "check:bundles": "node scripts/check-bundles.mjs",
+    "test:e2e": "playwright test",
+    "test:hardware": "playwright test --config playwright.hardware.config.ts"
   },
   "dependencies": {
     "@react-three/fiber": "9.8.2",
@@ -23,6 +28,7 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@eslint/js": "10.0.1",
     "@playwright/test": "^1.65.0",
     "@testing-library/react": "16.3.3",
     "@types/node": "26.6.6",
@@ -30,9 +36,15 @@
     "@types/react-dom": "19.3.0",
     "@types/three": "0.187.0",
     "@vitejs/plugin-react": "6.2.1",
+    "eslint": "10.14.0",
+    "globals": "17.14.0",
     "jsdom": "31.0.0",
-    "typescript": "7.0.2",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.72.1",
     "vite": "8.3.6",
     "vitest": "5.1.0"
+  },
+  "engines": {
+    "node": ">=24 <25"
   }
 }

@@ -4,8 +4,11 @@ test('native transitions preserve the shared post title and keep lateral navigat
   await page.addInitScript(() => {
     const original = document.startViewTransition.bind(document);
     (window as unknown as { transitionFrames: unknown[] }).transitionFrames = [];
+    (window as unknown as { pendingTransitions: number }).pendingTransitions = 0;
     document.startViewTransition = ((...args: Parameters<typeof original>) => {
+      (window as unknown as { pendingTransitions: number }).pendingTransitions++;
       const transition = original(...args);
+      transition.finished.finally(() => { (window as unknown as { pendingTransitions: number }).pendingTransitions--; }).catch(() => {});
       transition.ready.then(() => {
         (window as unknown as { transitionFrames: unknown[] }).transitionFrames.push(document.getAnimations().map(animation => {
           const effect = animation.effect as KeyframeEffect;
@@ -21,19 +24,22 @@ test('native transitions preserve the shared post title and keep lateral navigat
   // Warm the lazy reader through a real visit; paired content must be ready together.
   await page.getByRole('link', { name: 'A first note — sample post' }).click();
   await page.getByRole('link', { name: 'Back to Blog' }).click();
+  await expect(page).toHaveURL(/\/blog$/);
+  await expect.poll(() => page.evaluate(() => (window as unknown as { pendingTransitions: number }).pendingTransitions)).toBe(0);
   await page.evaluate(() => (window as unknown as { transitionFrames: unknown[] }).transitionFrames = []);
   await page.getByRole('link', { name: 'A first note — sample post' }).click();
   await expect.poll(() => page.evaluate(() => JSON.stringify((window as unknown as { transitionFrames: unknown[] }).transitionFrames))).toContain('post-first-note-title');
-  await page.evaluate(() => Promise.all(document.getAnimations().map(animation => animation.finished.catch(() => {}))));
+  await expect.poll(() => page.evaluate(() => (window as unknown as { pendingTransitions: number }).pendingTransitions)).toBe(0);
   await page.evaluate(() => (window as unknown as { transitionFrames: unknown[] }).transitionFrames = []);
   await page.getByRole('navigation').getByRole('link', { name: 'Home' }).click();
   await expect(page.locator('.story-opening')).toBeVisible();
   await expect.poll(() => page.evaluate(() => (window as unknown as { transitionFrames: unknown[] }).transitionFrames.length)).toBeGreaterThan(0);
+  await expect.poll(() => page.evaluate(() => (window as unknown as { pendingTransitions: number }).pendingTransitions)).toBe(0);
   const lateral = await page.evaluate(() => (window as unknown as { transitionFrames: { target: string; frames: Record<string, unknown>[] }[][] }).transitionFrames);
   for (const animation of lateral.flat()) {
     // A static snapshot matrix is harmless; a changing transform would imply a slide.
     const transforms = animation.frames.map(frame => frame.transform).filter(value => typeof value === 'string');
-    expect(new Set(transforms).size).toBeLessThanOrEqual(1);
+    expect(new Set(transforms).size, JSON.stringify(animation)).toBeLessThanOrEqual(1);
   }
   expect(errors).toEqual([]);
 });

@@ -5,7 +5,7 @@ import { PassThrough } from 'node:stream';
 import { StaticRouter } from 'react-router-dom';
 import { BlogPage } from './routes/BlogPage';
 import { BlogPostPage } from './routes/BlogPostPage';
-import { AppLayout } from './App';
+import { AppLayout } from './AppLayout';
 import { getAllPosts } from './content/posts';
 
 export const prerenderPaths = () => ['/', '/blog', ...getAllPosts().map(post => `/blog/${post.slug}`)];

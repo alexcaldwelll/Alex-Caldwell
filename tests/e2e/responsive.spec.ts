@@ -21,6 +21,8 @@ test('390px Home has an accessible static journey without cinematic imports', as
 test('narrow reader contains real long unbroken title, tag, link and code content', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 740 });
   await page.goto('/blog/first-note');
+  // Mutate only after the real lazy reader has hydrated.
+  await page.waitForLoadState('networkidle');
   await page.locator('.blog-reader').evaluate(element => {
     element.querySelector('h1')!.textContent = 'LongUnbrokenTitle'.repeat(35);
     element.querySelector('.blog-excerpt')!.textContent = 'LongUnbrokenExcerpt'.repeat(80);

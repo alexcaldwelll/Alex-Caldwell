@@ -1,0 +1,78 @@
+{
+  "assets": [
+    {
+      "path": "src/assets/scenes/opening.webp",
+      "origin": "generated",
+      "source": "OpenAI image generation 2026-11-06; original exec-806133ea-8c24-41b6-bffc-31e1b1dab89e.png; details in src/assets/scenes/README.md",
+      "license": "Original AI-generated artwork; OpenAI output terms; no third-party source assets"
+    },
+    {
+      "path": "src/assets/scenes/seattle.webp",
+      "origin": "generated",
+      "source": "OpenAI image generation 2026-11-06; original exec-bee8163e-1cc2-43f6-b064-dfccfb928976.png; details in src/assets/scenes/README.md",
+      "license": "Original AI-generated artwork; OpenAI output terms; no third-party source assets"
+    },
+    {
+      "path": "src/assets/scenes/charleston.webp",
+      "origin": "generated",
+      "source": "OpenAI image generation 2026-11-06; original exec-3913dd08-defd-4a0d-a476-cda627a7bfe2.png; details in src/assets/scenes/README.md",
+      "license": "Original AI-generated artwork; OpenAI output terms; no third-party source assets"
+    },
+    {
+      "path": "src/assets/scenes/dc.webp",
+      "origin": "generated",
+      "source": "OpenAI image generation 2026-11-06; original exec-4cfe89ea-5d9d-4d5f-af1d-e81408fcaad8.png; details in src/assets/scenes/README.md",
+      "license": "Original AI-generated artwork; OpenAI output terms; no third-party source assets"
+    },
+    {
+      "path": "src/assets/scenes/nashville.webp",
+      "origin": "generated",
+      "source": "OpenAI image generation 2026-11-06; original exec-bf65c077-57cc-4e73-be70-7f655e04a63e.png; details in src/assets/scenes/README.md",
+      "license": "Original AI-generated artwork; OpenAI output terms; no third-party source assets"
+    },
+    {
+      "path": "src/assets/scenes/future.webp",
+      "origin": "generated",
+      "source": "OpenAI image generation 2026-11-06; original exec-fd163c08-3ce7-4e79-931a-dcf6700265ee.png; details in src/assets/scenes/README.md",
+      "license": "Original AI-generated artwork; OpenAI output terms; no third-party source assets"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "opening",
+      "files": [
+        "src/assets/scenes/opening.webp"
+      ]
+    },
+    {
+      "id": "seattle",
+      "files": [
+        "src/assets/scenes/seattle.webp"
+      ]
+    },
+    {
+      "id": "charleston",
+      "files": [
+        "src/assets/scenes/charleston.webp"
+      ]
+    },
+    {
+      "id": "dc",
+      "files": [
+        "src/assets/scenes/dc.webp"
+      ]
+    },
+    {
+      "id": "nashville",
+      "files": [
+        "src/assets/scenes/nashville.webp"
+      ]
+    },
+    {
+      "id": "future",
+      "files": [
+        "src/assets/scenes/future.webp"
+      ]
+    }
+  ]
+}
