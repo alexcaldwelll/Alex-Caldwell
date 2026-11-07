@@ -11,4 +11,70 @@
   inset: 0;
   pointer-events: none;
 }
-.desktop-canvas canvas { display: block; }
+.desktop-canvas canvas {
+  display: block;
+}
+.story-opening:has(.cinematic-journey) {
+  display: block;
+  overflow: visible;
+}
+.cinematic-journey {
+  position: relative;
+  height: 1400svh;
+  width: 100%;
+}
+.story-stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+}
+.cinematic-journey .desktop-scene {
+  height: 100svh;
+}
+.cinematic-captions {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.cinematic-caption {
+  position: absolute;
+  left: var(--page-gutter);
+  width: min(24rem, 30vw);
+  padding: 1.4rem;
+  background: rgb(246 242 233 / 0.88);
+  border-radius: 2px;
+}
+.cinematic-caption h2 {
+  font-size: clamp(1.8rem, 3vw, 3rem);
+  font-weight: 400;
+  letter-spacing: -0.04em;
+  margin: 0 0 0.6rem;
+}
+.cinematic-caption p {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin: 0;
+}
+.caption-seattle {
+  top: 12%;
+}
+.caption-charleston {
+  top: 31%;
+}
+.caption-dc {
+  top: 49%;
+}
+.caption-nashville {
+  top: 69%;
+}
+.caption-future {
+  top: 90%;
+}
+.story-opening:has(.cinematic-journey) + .static-journey {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  padding: 0;
+}
