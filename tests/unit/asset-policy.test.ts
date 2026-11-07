@@ -90,4 +90,46 @@ describe('asset release policy', () => {
     expect(result.output).toMatch(/remote asset.*local/i);
   });
 
+  it.each([
+    ['src/scene.tsx', '<img src="https://example.test/unbounded-image" />'],
+    ['src/scene.tsx', '<img src={"https://example.test/unbounded-image"} />'],
+    ['src/scene.tsx', '<img srcSet="https://example.test/small 1x, //example.test/large 2x" />'],
+    ['src/style.css', '.poster { background: url(https://example.test/unbounded-image); }'],
+    ['index.html', '<img src="https://example.test/unbounded-image" />'],
+    ['src/scene.tsx', `<div style={{ backgroundImage: 'url(https://example.test/unbounded-image)' }} />`],
+    ['index.html', '<video poster="https://example.test/unbounded-image"></video>'],
+  ])('rejects extensionless remote asset references in %s: %s', (filename, content) => {
+    const { root } = fixture();
+    writeFileSync(join(root, filename), content);
+    const result = check(root);
+    expect(result.status).toBe(1);
+    expect(result.output).toMatch(/remote asset.*local/i);
+  });
+  it.each([
+    '![Illustration][photo]\n\n[photo]: https://example.test/unbounded-image "A title"',
+    '![photo][]\n\n[photo]: /covers/absent-image',
+    '![photo]\n\n[photo]: ./assets/absent-image',
+    '![Illustration](<https://example.test/unbounded-image> "A title")',
+  ])('checks Markdown images using the supported parser: %s', content => {
+    const { root } = fixture();
+    writeFileSync(join(root, 'src/post.md'), content);
+    const result = check(root);
+    expect(result.status).toBe(1);
+    expect(result.output).toMatch(/(?:remote asset|missing asset reference)/i);
+  });
+  it('rejects missing extensionless local image attributes', () => {
+    const { root } = fixture();
+    writeFileSync(join(root, 'src/scene.tsx'), '<img src="/covers/absent-image" />');
+    const result = check(root);
+    expect(result.status).toBe(1);
+    expect(result.output).toContain('/covers/absent-image');
+  });
+  it('preserves ordinary Markdown, JSX and HTML hyperlinks, including image-looking destinations', () => {
+    const { root } = fixture();
+    writeFileSync(join(root, 'src/post.md'), '[Read](https://example.test/article.png)\n\n[Read more][note]\n\n[note]: /unavailable-article.png');
+    writeFileSync(join(root, 'src/scene.tsx'), '<><a href="https://example.test/article.png">Read</a><Link to="/unavailable-article.png">More</Link></>');
+    writeFileSync(join(root, 'index.html'), '<a href="https://example.test/article.png">Read</a>');
+    expect(check(root).status).toBe(0);
+  });
+
 });

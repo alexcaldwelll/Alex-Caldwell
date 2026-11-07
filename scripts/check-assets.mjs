@@ -1,5 +1,6 @@
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { dirname, extname, relative, resolve } from 'node:path';
+import { assetReferences } from './asset-references.mjs';
 
 // Decimal bytes/kB, decoded pixels; these are delivery limits, not GPU/FPS claims.
 const limits = { rasterBytes: 200_000, rasterPixels: 2_000_000, geometryBytes: 1_000_000, fontBytes: 150_000, sceneBytes: 1_200_000, totalRasterBytes: 900_000 };
@@ -95,20 +96,17 @@ try {
     }
     if (bytes > limits.sceneBytes) errors.push(`${scene.id}: scene budget exceeded (${bytes} > ${limits.sceneBytes})`);
   }
-  // Inspect literal asset URLs across application imports, JSX/CSS, Markdown and
-  // frontmatter independently of the manifest. New missing references cannot hide.
-  const reference = /(?:["'`(]|:\s*)([^\s"'`()<>]+\.(?:webp|png|jpe?g|gif|avif|svg|glb|gltf|bin|woff2?|ttf|otf|hdr|ktx2?)(?:[?#][^\s"'`()<>]*)?)/gi;
-  for (const file of files.filter(file => /\.(?:[cm]?[jt]sx?|css|md|html)$/.test(file))) {
-    const content = readFileSync(file, 'utf8');
-    const pattern = file.endsWith('.md') ? /(?:!\[[^\]]*\]\(|coverImage:\s*["']?)([^\s"'()<>]+)/g : reference;
-    for (const match of content.matchAll(pattern)) {
-      const url = match[1].split(/[?#]/)[0];
-      if (/^(?:https?:|data:|\/\/)/.test(url)) {
-        errors.push(`${relative(root, file)}: remote asset ${url} requires a local file for reproducible existence and size checks`);
+  // Asset-bearing syntax is inspected independently of URL/file extensions.
+  for (const file of files.filter(file => /\.(?:[cm]?[jt]sx?|css|md|html|svg)$/.test(file))) {
+    for (const { url: reference, kind } of assetReferences(readFileSync(file, 'utf8'), file)) {
+      if (/^(?:[a-z][a-z0-9+.-]*:|\/\/)/i.test(reference)) {
+        errors.push(`${relative(root, file)}: remote asset ${reference} requires a local file for reproducible existence and size checks`);
         continue;
       }
-      const target = url.startsWith('/') ? local(`public${url}`) : resolve(dirname(file), url);
-      if (!target.startsWith(root + '/') || !existsSync(target)) errors.push(`${relative(root, file)}: missing asset reference ${url}`);
+      const url = reference.split(/[?#]/)[0];
+      const target = url.startsWith('/src/') ? local(url.slice(1)) : url.startsWith('/') ? local(`public${url}`) : resolve(dirname(file), url);
+      if (!target.startsWith(root + '/') || !existsSync(target) || !statSync(target).isFile()) errors.push(`${relative(root, file)}: missing asset reference ${reference}`);
+      else if (kind !== 'code' && !media.test(target)) errors.push(`${relative(root, file)}: unsupported asset format ${reference}; use a local supported format so provenance and size can be verified`);
     }
   }
   const report = { limits, assets: measured, totalRasterBytes: rasterBytes, errors };
