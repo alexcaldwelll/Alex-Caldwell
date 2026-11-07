@@ -1,0 +1,11 @@
+:root {
+  --color-cream: #faf6ee;
+  --color-blush: #eedbd6;
+  --color-ink: #3c3430;
+  --color-focus: #785644;
+  --font-body: Georgia, 'Times New Roman', serif;
+  --space-sm: 0.75rem;
+  --space-md: 1.5rem;
+  --space-lg: 2.5rem;
+  --page-gutter: clamp(1.25rem, 5vw, 4rem);
+}
