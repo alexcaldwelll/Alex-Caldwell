@@ -21,6 +21,6 @@ describe('application shell', () => {
     render(<App />);
 
     expect(screen.queryByRole('heading', { name: /welcome/i })).toBeNull();
-    expect(screen.getByRole('main').textContent).toBe('');
+    expect(screen.getByRole('main').querySelector('.story-opening')?.textContent).toBe('');
   });
 });

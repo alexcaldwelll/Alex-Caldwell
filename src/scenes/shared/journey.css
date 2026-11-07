@@ -1,0 +1,62 @@
+.story-opening {
+  min-height: calc(100svh - 6.75rem);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.story-opening img {
+  display: block;
+  width: min(100%, 100rem);
+  height: auto;
+  max-height: calc(100svh - 7rem);
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+
+.static-journey {
+  padding: clamp(4rem, 10vw, 10rem) var(--page-gutter) 5rem;
+}
+
+.story-chapter {
+  max-width: 80rem;
+  margin: 0 auto clamp(6rem, 15vw, 15rem);
+}
+
+.chapter-caption {
+  max-width: 34rem;
+  padding: 0 0 2rem;
+}
+
+.chapter-caption h2 {
+  margin: 0 0 1rem;
+  font-size: clamp(2rem, 4vw, 3.75rem);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+}
+
+.chapter-caption p {
+  margin: 0;
+  font-size: clamp(1rem, 1.4vw, 1.15rem);
+  line-height: 1.8;
+}
+
+.chapter-poster {
+  display: block;
+  width: 100%;
+  height: auto;
+  mix-blend-mode: multiply;
+}
+
+.story-chapter[data-faith-visible='true'] .chapter-caption {
+  border-inline-start: 2px solid #b8934e;
+  padding-inline-start: 1.25rem;
+}
+
+@media (max-width: 40rem), (pointer: coarse) {
+  .story-opening img { width: 100%; }
+  .static-journey { padding-top: 4rem; }
+  .chapter-caption { padding-bottom: 1.5rem; }
+  .story-chapter { margin-bottom: 6rem; }
+}

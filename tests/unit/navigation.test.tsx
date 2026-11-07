@@ -43,7 +43,8 @@ describe('shared navigation', () => {
     const home = within(screen.getByRole('main')).getByRole('link', { name: 'Home' });
     fireEvent.click(home);
     expect(window.location.pathname).toBe('/');
-    expect(screen.queryByRole('heading')).toBeNull();
+    expect(screen.queryByRole('heading', { name: 'Page not found' })).toBeNull();
+    expect(screen.getByRole('heading', { name: 'Seattle' })).toBeDefined();
     expect(within(screen.getByRole('navigation', { name: 'Primary' })).getAllByRole('link')).toHaveLength(2);
   });
 });
