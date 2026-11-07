@@ -23,7 +23,8 @@ try {
     };
     visit(route);
     const links = [...styles].filter(css => !template.includes(`/${css}`)).map(css => `<link rel="stylesheet" href="/${css}">`).join('');
-    const html = template.replace('<div id="root"></div>', `<div id="root">${await render(path)}</div>`).replace('</head>', `${links}</head>`);
+    const markup = await render(path);
+    const html = template.replace('<div id="root"></div>', () => `<div id="root">${markup}</div>`).replace('</head>', () => `${links}</head>`);
     const destination = resolve('dist', `.${path === '/' ? '' : path}/index.html`);
     await mkdir(dirname(destination), { recursive: true });
     await writeFile(destination, html);
