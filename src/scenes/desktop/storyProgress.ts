@@ -175,7 +175,8 @@ export function activeMemory(progress: number) {
 }
 export function drawingWeight(event: MemoryEvent, progress: number) {
   const t = memoryPhase(event, progress);
-  return ease(t / 0.2) * (1 - ease((t - 0.62) / 0.38));
+  // Arrive on the contour before memoryStrokes starts at phase 0.16.
+  return ease(t / 0.16) * (1 - ease((t - 0.62) / 0.38));
 }
 export function getStoryState(progress: number) {
   const p = clamp(progress);

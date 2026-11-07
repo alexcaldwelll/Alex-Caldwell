@@ -60,3 +60,9 @@
   .chapter-caption { padding-bottom: 1.5rem; }
   .story-chapter { margin-bottom: 6rem; }
 }
+
+/* Fade the illustrated paper perimeter into the surrounding cream. */
+.chapter-poster, .story-opening > img {
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent), linear-gradient(to bottom, transparent, #000 8%, #000 92%, transparent);
+  mask-composite: intersect;
+}

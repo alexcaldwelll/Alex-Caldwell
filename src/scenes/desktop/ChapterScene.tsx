@@ -1,9 +1,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import {
-  BufferGeometry,
   Color,
-  Float32BufferAttribute,
   Group,
   LineBasicMaterial,
   Mesh,
@@ -17,6 +15,7 @@ import {
   memoryStrokes,
   type MemoryEvent,
 } from "./storyProgress";
+import { createMemoryGeometry, updateMemoryGeometry } from "./memoryGeometry";
 import { MEMORY_PLACEMENTS } from "./memoryRoute";
 import { Landmark } from "./Landmarks";
 import type { StoryChapter } from "./sceneData";
@@ -41,17 +40,7 @@ function Memory({
     solid = useRef<Group>(null),
     material = useRef<LineBasicMaterial>(null);
   const colors = useRef<{ material: MeshStandardMaterial; color: Color }[]>([]);
-  const geometry = useMemo(() => {
-    const points = MEMORY_SKETCHES[event.kind],
-      vertices: number[] = [];
-    for (let i = 1; i < points.length; i++) {
-      vertices.push(...points[i - 1], ...points[i]);
-    }
-    const buffer = new BufferGeometry();
-    buffer.setAttribute("position", new Float32BufferAttribute(vertices, 3));
-    buffer.setDrawRange(0, 0);
-    return buffer;
-  }, [event.kind]);
+  const geometry = useMemo(() => createMemoryGeometry(MEMORY_SKETCHES[event.kind]), [event.kind]);
   useEffect(() => {
     colors.current = [];
     solid.current?.traverse((object) => {
@@ -76,10 +65,7 @@ function Memory({
     const future = event.chapter === "future";
     const strokes = memoryStrokes(event, p),
       volume = ease((phase - 0.53) / 0.32) * (future ? 0.24 : 1);
-    geometry.setDrawRange(
-      0,
-      Math.floor((strokes * geometry.attributes.position.count) / 2) * 2,
-    );
+    updateMemoryGeometry(geometry, MEMORY_SKETCHES[event.kind], strokes);
     material.current.opacity = future ? 1 : 1 - ease((phase - 0.7) / 0.3);
     solid.current.visible = volume > 0;
     solid.current.scale.y = Math.max(0.004, volume);

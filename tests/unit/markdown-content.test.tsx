@@ -17,7 +17,7 @@ it('renders long titles and excerpts without requiring a cover', () => {
   const { container } = render(<MemoryRouter><BlogCard post={{ slug: 'long', title, date: '2026-11-06', excerpt: 'Long excerpt '.repeat(100), content: '' }} /></MemoryRouter>);
   expect(screen.getByRole('link', { name: title.trim() }).getAttribute('href')).toBe('/blog/long');
   expect(container.querySelector('img')).toBeNull();
-  expect(container.querySelector('.blog-card')).toBeDefined();
+  expect(container.querySelector('.blog-card')).not.toBeNull();
 });
 it('renders a useful not-found state for an unknown post', async () => {
   render(<MemoryRouter initialEntries={['/blog/unknown']}><AppRoutes /></MemoryRouter>);

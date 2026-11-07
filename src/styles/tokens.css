@@ -3,7 +3,8 @@
   --color-blush: #eedbd6;
   --color-ink: #3c3430;
   --color-focus: #785644;
-  --font-body: Georgia, 'Times New Roman', serif;
+  --font-title: Georgia, 'Times New Roman', serif;
+  --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
   --space-sm: 0.75rem;
   --space-md: 1.5rem;
   --space-lg: 2.5rem;
