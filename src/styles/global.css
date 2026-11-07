@@ -59,3 +59,17 @@ a:focus-visible {
 main {
   flex: 1;
 }
+
+.site-header nav a[aria-current="page"] {
+  text-decoration: underline;
+}
+
+.not-found {
+  padding: var(--space-md) var(--page-gutter);
+}
+
+@media (max-width: 24rem) {
+  .site-header {
+    flex-wrap: wrap;
+  }
+}

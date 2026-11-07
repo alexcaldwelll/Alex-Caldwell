@@ -1,15 +1,28 @@
+import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
+import { SiteHeader } from './components/SiteHeader';
+import { SiteFooter } from './components/SiteFooter';
+import { HomePage } from './routes/HomePage';
+import { BlogPage } from './routes/BlogPage';
+
 export function App() {
   return (
-    <div className="app-shell">
-      <header className="site-header">
-        <a className="site-brand" href="/">Alexandra</a>
-        <nav aria-label="Primary">
-          <a href="/">Home</a>
-          <a href="/blog">Blog</a>
-        </nav>
-      </header>
-      <main id="main-content" />
-      <footer className="site-footer" />
-    </div>
+    <BrowserRouter>
+      <div className="app-shell">
+        <SiteHeader />
+        <main id="main-content">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/blog" element={<BlogPage />} />
+            <Route path="*" element={
+              <div className="not-found">
+                <h1>Page not found</h1>
+                <Link to="/">Home</Link>
+              </div>
+            } />
+          </Routes>
+        </main>
+        <SiteFooter />
+      </div>
+    </BrowserRouter>
   );
 }
