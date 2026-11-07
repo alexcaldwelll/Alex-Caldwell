@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
 import { App } from '../../src/App';
 
@@ -15,7 +15,7 @@ describe('shared navigation', () => {
     expect(within(header).getAllByRole('link').map(link => link.textContent)).toEqual(['Alexandra', 'Home', 'Blog']);
   });
 
-  it('navigates between pages and marks only the current primary link', () => {
+  it('navigates between pages and marks only the current primary link', async () => {
     render(<App />);
     const home = screen.getByRole('link', { name: 'Home' });
     const blog = screen.getByRole('link', { name: 'Blog' });
@@ -23,7 +23,7 @@ describe('shared navigation', () => {
     expect(blog.getAttribute('aria-current')).toBeNull();
     fireEvent.click(blog);
     expect(window.location.pathname).toBe('/blog');
-    expect(blog.getAttribute('aria-current')).toBe('page');
+    await waitFor(() => expect(blog.getAttribute('aria-current')).toBe('page'));
     expect(home.getAttribute('aria-current')).toBeNull();
     fireEvent.click(home);
     expect(window.location.pathname).toBe('/');

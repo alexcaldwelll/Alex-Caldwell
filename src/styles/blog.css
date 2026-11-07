@@ -1,0 +1,21 @@
+.blog-page { width: min(100% - 2 * var(--page-gutter), 68rem); margin-inline: auto; padding-block: clamp(3rem, 8vw, 7rem); overflow-wrap: anywhere; }
+.blog-page h1, .blog-card h2 { font-family: Georgia, 'Times New Roman', serif; font-weight: 400; line-height: 1.1; }
+.blog-page h1 { font-size: clamp(3rem, 7vw, 6rem); margin: 0.35em 0 0.6em; letter-spacing: -0.045em; }
+.blog-eyebrow, .blog-page time { font-size: 0.85rem; letter-spacing: 0.04em; }
+.blog-intro { padding-bottom: 2rem; }
+.blog-list { max-width: 48rem; }
+.blog-card { min-width: 0; border-top: 1px solid #d6c7bc; padding-block: 2.5rem; }
+.blog-card h2 { font-size: clamp(2rem, 4vw, 3rem); margin: 0.5em 0; letter-spacing: -0.025em; }
+.blog-card h2 a { text-decoration-thickness: 1px; }
+.blog-card p { max-width: 60ch; }
+.blog-tags { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0; margin-block: 1.4rem; }
+.blog-tags li { border-radius: 2rem; background: var(--color-blush); padding: 0.25rem 0.8rem; font-size: 0.8rem; }
+.blog-reader { max-width: 48rem; }
+.blog-back { display: inline-block; margin-bottom: 3rem; }
+.blog-excerpt { font-size: 1.2rem; max-width: 60ch; }
+.blog-cover { display: block; width: 100%; max-height: 30rem; object-fit: cover; border-radius: 0.25rem; margin-block: 2rem; }
+.markdown-content { margin-top: 3rem; max-width: 65ch; font-size: 1.1rem; line-height: 1.85; }
+.markdown-content h2, .markdown-content h3 { font-family: Georgia, 'Times New Roman', serif; font-weight: 400; line-height: 1.3; margin-top: 2em; }
+.markdown-content img { max-width: 100%; height: auto; }
+.markdown-content pre { overflow-x: auto; padding: 1rem; background: var(--color-blush); }
+.markdown-content blockquote { margin-inline: 0; padding-left: 1.5rem; border-left: 2px solid #caa87c; }
