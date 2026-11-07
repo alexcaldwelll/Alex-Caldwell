@@ -37,3 +37,19 @@ Generated 2026-11-06 with OpenAI image generation. Original AI-generated interpr
 - Dimensions: 1672 × 941
 - Source: `generated_images/01a1b303-2052-79d3-9868-a06aa0ea5b0d/exec-fd163c08-3ce7-4e79-931a-dcf6700265ee.png`
 - Meaning: An unfinished road and partially drawn possibilities; golden light continues.
+
+## Original desktop geometry (Task 5)
+
+The desktop pencil, paper and two road ribbons are authored in this repository from Three.js geometric primitives and numerical curves. There are no downloaded models, textures, HDR environments, fonts, or copied reference-site assets. The generated opening image above is the visual material/proportion reference and complete loading/error poster. Yellow lacquer, six-sided barrel, cedar tip, graphite, rolled silver ferrule and pink eraser remain one fixed design throughout progress. The poster is interpretive artwork; the geometry is a separate original construction, not an image-to-3D reconstruction.
+
+### Proposed authored-scene resource budget
+
+These are implementation limits to guide subsequent chapter work, **not measured frame-rate or GPU benchmarks**:
+
+- Task 5 base primitives: fewer than 10,000 triangles and 24 main-pass draw calls (shadows add their own pass).
+- One 1024 × 1024 directional shadow map; no scene image textures or model downloads.
+- Renderer DPR at most 1.5; pause the render loop when canvas is outside the viewport or document is hidden.
+- Initial desktop scene JavaScript target: at most 300 kB gzip. The production build at Task 5 emits the isolated scene/library chunk at approximately 245 kB gzip; the static/mobile/Blog path does not request it.
+- Proposed complete story ceiling for Task 6: 100,000 visible triangles, 80 main-pass draw calls, 16 MiB authored texture resources, and no more than one shadow-casting light. Revisit this ceiling with real browser measurements on representative hardware before launch.
+
+Resource ownership: React Three Fiber owns and disposes declarative geometries, materials, lights and its renderer on unmount. Our lifecycle binding disconnects its intersection observer and removes visibility/context-loss listeners. All per-frame transforms and reveal state use retained vectors/refs; no React state is updated per frame. WebGL initialization errors, context loss and lazy-load errors remove the renderer and retain the opening poster plus semantic static journey.

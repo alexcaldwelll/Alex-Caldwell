@@ -1,0 +1,14 @@
+.desktop-scene {
+  position: relative;
+  width: 100%;
+  height: calc(100svh - 6.75rem);
+  min-height: 28rem;
+  display: grid;
+  place-items: center;
+}
+.desktop-canvas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.desktop-canvas canvas { display: block; }
