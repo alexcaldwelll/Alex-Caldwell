@@ -33,6 +33,10 @@ test('production HTML contains every valid route with JavaScript disabled', asyn
     expect(response!.status()).toBe(200);
     await expect(page.locator('main h1')).toHaveCount(1);
     if (path === '/') {
+      const openingPoster = page.locator('.story-opening img');
+      await expect(openingPoster).toBeVisible();
+      await expect.poll(() => openingPoster.evaluate((image: HTMLImageElement) => image.naturalWidth)).toBeGreaterThan(0);
+      await expect(page.locator('canvas')).toHaveCount(0);
       await expect(page.locator('.static-journey h2')).toHaveCount(5);
       for (const image of await page.locator('.chapter-poster').all()) {
         await image.scrollIntoViewIfNeeded();

@@ -1,8 +1,25 @@
+import { existsSync } from 'node:fs';
+import { resolve } from 'node:path';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
   plugins: [react(), {
+    name: 'preview-prerendered-pages',
+    configurePreviewServer({ config, middlewares }) {
+      const output = resolve(config.root, config.build.outDir);
+      middlewares.use((request, _response, next) => {
+        if (request.url && (request.method === 'GET' || request.method === 'HEAD')) {
+          const { pathname, search } = new URL(request.url, 'http://localhost');
+          // Serve directory indexes at the public, slashless URL before Vite's SPA fallback.
+          if (/^\/blog(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)?$/.test(pathname) && existsSync(resolve(output, `.${pathname}/index.html`))) {
+            request.url = `${pathname}/index.html${search}`;
+          }
+        }
+        next();
+      });
+    },
+  }, {
     name: 'development-static-html',
     apply: 'serve',
     // Develop and test the same complete initial HTML that the build emits.

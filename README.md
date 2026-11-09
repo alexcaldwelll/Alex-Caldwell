@@ -57,7 +57,11 @@ tags: [life]
 Write Markdown here.
 ```
 
-Invalid metadata is skipped by the existing content loader. Raw HTML and unsafe Markdown links are not rendered. Local cover files belong in `public/`; use `/covers/...` URLs. Register every added binary asset in `asset-policy.json` with its origin, source and license. Licensed third-party files and font binaries also require a real, nonempty repository license file via `licenseFile`. Release checks require local asset files, including blog covers: remote assets must be copied locally with the appropriate rights and provenance so existence and delivered size can be checked reproducibly. Generated illustrations retain their original generation records in `src/assets/scenes/README.md`. System-font references are documented in `src/assets/fonts/README.md`.
+`title`, `date` and `excerpt` are required. Use a real calendar date in `YYYY-MM-DD` form. `tags` is an optional list of strings and `coverImage` is an optional image path. The lowercase filename, with words separated by hyphens, sets the URL at `/blog/<slug>`. Posts appear newest first. The content loader skips posts with invalid metadata. The Markdown renderer displays standard Markdown and filters raw HTML and unsafe link URLs.
+
+Place local covers under `public/covers/` and use `/covers/...` URLs. Register every added binary asset in `asset-policy.json` with its origin, source and license. Licensed third-party files and font binaries also require a nonempty repository license file via `licenseFile`. Keep published media local so the release checks can verify its provenance and size. Generated illustrations retain their original generation records in `src/assets/scenes/README.md`. System-font references are documented in `src/assets/fonts/README.md`.
+
+For a new 3D asset, export an optimized GLB or glTF, record the creator and source, and register the file and its scene group in `asset-policy.json`. Include any separate textures or geometry files in that group. Check the limits below with `npm run check:assets` and verify the chapter in the browser before opening the pull request.
 
 `check:assets` independently scans application media imports/literals, HTML/JSX media attributes (including srcset), CSS URLs, reader-parsed inline/reference Markdown images and cover frontmatter, checks existence, discovers unregistered binaries in `src/` and `public/`, and validates the manifest and scene groups. Dynamically constructed asset paths must also be listed explicitly in the manifest. PNG, JPEG, WebP and GIF headers are checked for decoded dimensions; unsupported raster formats fail closed until a reviewed dimension decoder is added.
 
@@ -93,9 +97,21 @@ On one Apple M1 Pro/Chrome hardware run, completed overviews measured 95–166 c
 
 Vite's own compression estimate is **302.01 kB gzip / 1,081.69 kB minified** for the desktop chunk; its compression implementation differs slightly from the fixed zlib gate. This still exceeds the earlier nonbinding 300 kB Vite target. The release ceiling of 320 kB allows about 6% incremental room for the complete story while total desktop and all-JavaScript limits catch dependency growth. Named Three imports and the existing desktop lazy boundary were inspected; removing required lighting/geometry or speculative vendor splitting solely to erase a warning would not improve the measured complete dependency group. Vite's default >500 kB warning remains visible; its warning threshold has not been raised.
 
-## CI and remaining release work
+## GitHub and Vercel
 
-GitHub Actions runs lockfile installation, lint, strict types, unit tests, assets, the real production/prerender build, bundle budgets and portable Chromium checks. It uses only `contents: read`, no persisted checkout credentials, pinned official action commits and Node 24. It does not deploy or publish. Hosting configuration and real deployed route checks remain separate release work.
+Push reviewed work to a feature branch and open a pull request. GitHub Actions runs lockfile installation, lint, strict types, unit tests, asset checks, the production build, bundle budgets and portable Chromium checks. The workflow uses read-only repository access, pinned official actions and Node 24.
+
+After approval to connect hosting, import `alexcaldwelll/Alex-Caldwell` into Vercel with `main` as the production branch. The repository's `vercel.json` selects Vite, installs from the lockfile with `npm ci`, builds with `npm run build`, and serves `dist`. The package engine range selects Node 24. Each published route has its own generated `index.html`. Vercel serves these directory indexes at their routes and redirects trailing-slash URLs to their slashless form. [Vercel build and URL settings](https://vercel.com/docs/project-configuration/vercel-json) · [Directory indexes](https://vercel.com/docs/directory-listing) · [Supported Node.js versions](https://vercel.com/docs/functions/runtimes/node-js/node-js-versions)
+
+Once Vercel is connected, feature branch commits can produce previews and commits to `main` trigger production builds. Verify the preview before approving production publication. [Vercel’s GitHub integration](https://vercel.com/docs/git/vercel-for-github)
+
+`npm run build` followed by `npm run test:e2e -- tests/e2e/prerender.spec.ts` verifies the generated files locally, including direct routes with JavaScript disabled. To browse the built site locally, run `npm run preview` after building. When a reachable Vercel preview is available, run the direct-route smoke test against it:
+
+```sh
+DEPLOYMENT_URL=https://your-preview.vercel.app npm run test:e2e -- tests/e2e/deployment-smoke.spec.ts
+```
+
+The hosted test checks Home's opening poster and story, the Blog index and a linked post with JavaScript disabled. It skips when `DEPLOYMENT_URL` is unset. The current release candidate has local production coverage and awaits hosted verification.
 
 The live dependency audit currently reports a development-only minimatch advisory ([GHSA-g3hv-75wg-m249](https://github.com/advisories/GHSA-g3hv-75wg-m249)) through the lint stack. The reviewed advisory affects versions `>=7.0.0 <11.0.1`; npm's latest 10.x is 10.2.6, while upstream lint packages require 10.x. No compatible patched backport was available at verification. Current lint globs are repository-authored constants; minimatch is absent from the shipped browser bundles. A major transitive override has not been forced. Recheck upstream support before release.
 
