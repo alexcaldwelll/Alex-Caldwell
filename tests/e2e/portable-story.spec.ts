@@ -5,6 +5,9 @@ type Frame = { calls: number; triangles: number };
 declare global { interface Window { storyFrames: Frame[] } }
 
 test('portable software WebGL draws actual pencil and chapter pixels within total-pass budgets', async ({ page }, testInfo) => {
+  // Software rendering and pixel reads across five chapters can exceed the suite timeout in CI.
+  test.setTimeout(120_000);
+
   // Observe public WebGL calls on the actual site canvas. No private R3F imports,
   // substitute scene, screenshot of a poster, or fallback-as-success branch.
   await page.addInitScript(() => {
