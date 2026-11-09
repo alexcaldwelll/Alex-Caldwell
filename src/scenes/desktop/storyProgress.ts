@@ -186,8 +186,6 @@ export function getStoryState(progress: number) {
     ],
     road: ease(p / 0.045),
     memory: activeMemory(p)?.id ?? null,
-    airplane:
-      p > 0.185 && p < 0.225 ? Math.sin(((p - 0.185) / 0.04) * Math.PI) : 0,
     route: travelProgress(p) <= 0.48 ? "soccer" : "new-road",
     ballAbandoned: p > 0.49,
     faith: ease((p - 0.525) / 0.035),

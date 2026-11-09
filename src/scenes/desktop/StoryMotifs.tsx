@@ -8,26 +8,15 @@ import {
 } from "./route";
 import { MEMORY_PLACEMENTS } from "./memoryRoute";
 import { ease, travelProgress } from "./storyProgress";
-import { Box, SoccerBall } from "./Landmarks";
+import { SoccerBall } from "./Landmarks";
 
 const ball = ROAD_ROUTES[0].curve.getPoint(0.535);
 export function StoryMotifs({ progress, progressRef }: SceneProgressProps) {
-  const plane = useRef<Group>(null),
-    faith = useRef<Group>(null),
+  const faith = useRef<Group>(null),
     abandoned = useRef<Group>(null),
     position = useRef(new Vector3());
   useFrame(() => {
     const p = progressRef?.current ?? progress;
-    if (plane.current) {
-      plane.current.visible = p > 0.185 && p < 0.225;
-      const t = (p - 0.185) / 0.04;
-      writeStoryPosition(0.205, position.current);
-      plane.current.position.set(
-        position.current.x - 12 + t * 24,
-        4 + Math.sin(t * Math.PI),
-        position.current.z - 3,
-      );
-    }
     if (abandoned.current) {
       abandoned.current.visible = p > 0.462 && p < 0.67;
       const t = ease((p - 0.477) / 0.014),
@@ -52,25 +41,6 @@ export function StoryMotifs({ progress, progressRef }: SceneProgressProps) {
   });
   return (
     <>
-      <group
-        ref={plane}
-        visible={false}
-        name="airplane"
-        rotation={[0, 0, -0.08]}
-      >
-        <mesh castShadow rotation={[0, 0, Math.PI / 2]}>
-          <capsuleGeometry args={[0.18, 2.2, 6, 12]} />
-          <meshStandardMaterial color="#e7e7db" />
-        </mesh>
-        <Box
-          p={[0, 0, 0]}
-          s={[0.6, 0.08, 2.8]}
-          color="#91adb6"
-          rotation={-0.15}
-        />
-        <Box p={[-1, 0, 0]} s={[0.4, 0.07, 1]} color="#91adb6" />
-        <Box p={[-1, 0.3, 0]} s={[0.4, 0.6, 0.07]} color="#91adb6" />
-      </group>
       <group
         ref={abandoned}
         visible={false}

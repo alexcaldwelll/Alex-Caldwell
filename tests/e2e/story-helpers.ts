@@ -17,7 +17,9 @@ export async function atProgress(page: Page, progress: number) {
   await page.waitForTimeout(250);
 }
 export async function canvasPixels(page: Page) {
-  const png = await page.locator(".desktop-canvas canvas").screenshot();
+  const png = await page.locator(".desktop-canvas canvas").screenshot({
+    style: ".cinematic-artwork { visibility: hidden !important; }",
+  });
   return page.evaluate(async (base64) => {
     const img = new Image();
     img.src = `data:image/png;base64,${base64}`;

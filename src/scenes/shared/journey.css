@@ -5,7 +5,7 @@
   overflow: hidden;
 }
 
-.story-opening img {
+.story-opening > img, .desktop-scene > img {
   display: block;
   width: min(100%, 100rem);
   height: auto;
@@ -36,12 +36,6 @@
   letter-spacing: -0.035em;
 }
 
-.chapter-caption p {
-  margin: 0;
-  font-size: clamp(1rem, 1.4vw, 1.15rem);
-  line-height: 1.8;
-}
-
 .chapter-poster {
   display: block;
   width: 100%;
@@ -55,7 +49,7 @@
 }
 
 @media (max-width: 40rem), (pointer: coarse) {
-  .story-opening img { width: 100%; }
+  .story-opening > img, .desktop-scene > img { width: 100%; }
   .static-journey { padding-top: 4rem; }
   .chapter-caption { padding-bottom: 1.5rem; }
   .story-chapter { margin-bottom: 6rem; }

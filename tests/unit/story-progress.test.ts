@@ -32,9 +32,7 @@ describe("one continuous authored story", () => {
       );
     }
   });
-  it("uses a plane transition and retains the abandoned ball and faith after the fork", () => {
-    expect(getStoryState(0.205).airplane).toBeGreaterThan(0);
-    expect(getStoryState(0.3).airplane).toBe(0);
+  it("retains the abandoned ball and faith after the fork", () => {
     expect(getStoryState(0.46).route).toBe("soccer");
     expect(getStoryState(0.57).route).toBe("new-road");
     expect(getStoryState(0.57).ballAbandoned).toBe(true);

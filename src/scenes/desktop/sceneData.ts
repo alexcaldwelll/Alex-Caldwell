@@ -14,7 +14,6 @@ export type StoryChapter = {
   poster: string;
   posterWidth: number;
   posterHeight: number;
-  context: string;
   imageDescription: string;
 };
 
@@ -35,8 +34,6 @@ export const STORY_CHAPTERS: readonly StoryChapter[] = [
       "high-dive platform",
       "Mount Rainier",
     ],
-    context:
-      "Childhood and discovery. Growing up in Seattle, friendships, and the beginning of soccer.",
     imageDescription:
       "An interpretive Seattle memory scene with evergreens, the Space Needle, a lake and Mount Rainier.",
   },
@@ -57,8 +54,6 @@ export const STORY_CHAPTERS: readonly StoryChapter[] = [
       "Florida tournament",
       "college coaches",
     ],
-    context:
-      "Ambition. Soccer, long journeys for a team, and the pressure to stand out and be recruited.",
     imageDescription:
       "An interpretive coastal Charleston scene connecting palm trees, ocean, soccer and travel.",
   },
@@ -78,8 +73,6 @@ export const STORY_CHAPTERS: readonly StoryChapter[] = [
       "ball on old route",
       "St. Patrick’s Church",
     ],
-    context:
-      "Change and faith. Medical retirement from soccer marks a new road. The ball stays on the old route; faith and love enter the journey.",
     imageDescription:
       "An interpretive Washington, DC scene: the road branches away from soccer toward St. Patrick’s Church and a small golden light.",
   },
@@ -99,8 +92,6 @@ export const STORY_CHAPTERS: readonly StoryChapter[] = [
       "music",
       "Church of the Immaculate Conception",
     ],
-    context:
-      "Joy and exploration. Vanderbilt, running, trying new food, music, and the Church of the Immaculate Conception. Faith and love continue along the road.",
     imageDescription:
       "An interpretive Nashville scene bringing together Vanderbilt, running, food, music and church, accompanied by golden light.",
   },
@@ -114,7 +105,6 @@ export const STORY_CHAPTERS: readonly StoryChapter[] = [
     posterWidth: 1672,
     posterHeight: 941,
     landmarks: ["open page", "partial graphite sketches", "golden light"],
-    context: "The story is still being written.",
     imageDescription:
       "A pencil continues into an open page with partially drawn possibilities and a continuing golden light.",
   },

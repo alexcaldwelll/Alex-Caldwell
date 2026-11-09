@@ -30,7 +30,7 @@ test("hardware desktop renders the pencil and ordered continuous 3D chapters", a
   for (const [name, p, chapter] of [
     ["01-graphite", 0.05, "seattle"],
     ["02-seattle", 0.165, "seattle"],
-    ["03-plane", 0.205, "charleston"],
+    ["03-charleston-arrival", 0.205, "charleston"],
     ["04-charleston", 0.365, "charleston"],
     ["05-dc-fork", 0.51, "dc"],
     ["06-dc-faith", 0.57, "dc"],
