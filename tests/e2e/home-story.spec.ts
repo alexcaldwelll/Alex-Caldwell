@@ -124,7 +124,7 @@ test("actual WebGL draw calls stop offscreen/hidden and cleanly resume", async (
   await expect(page.locator("html")).not.toHaveClass(/lenis/);
 });
 
-test("each city flies into the same illustration as the static journey", async ({ page }) => {
+test("each city has a reversible arrival flight and a location-only label", async ({ page }) => {
   await page.goto("/");
   const journey = page.locator(".cinematic-journey");
   await expect(journey.locator("canvas")).toBeVisible();
@@ -136,8 +136,8 @@ test("each city flies into the same illustration as the static journey", async (
     ["nashville", "Nashville", 0.6],
   ] as const) {
     const plane = journey.locator(`[data-flight="${id}"]`);
-    const print = journey.locator(`[data-print="${id}"]`);
-    await atProgress(page, start + 0.14);
+    const label = journey.locator(`[data-location="${id}"]`);
+    await atProgress(page, start + 0.03);
     await expect(plane).toHaveCSS("opacity", "1");
     const position = await plane.boundingBox();
     expect(position?.x).toBeGreaterThan(0);
@@ -145,16 +145,12 @@ test("each city flies into the same illustration as the static journey", async (
 
     await atProgress(page, start + 0.18);
     await expect(plane).toHaveCSS("opacity", "0");
-    await expect(print).toHaveCSS("opacity", "1");
-    await expect(print.locator("figcaption")).toHaveText(name);
-    await expect(print.locator("img")).toHaveAttribute(
-      "src",
-      (await page.locator(`[aria-labelledby="chapter-${id}"] img`).getAttribute("src"))!,
-    );
-    await expect.poll(() => print.locator("img").evaluate((img: HTMLImageElement) => img.naturalWidth)).toBeGreaterThan(0);
+    await expect(label).toHaveCSS("opacity", "1");
+    await expect(label).toHaveText(name);
   }
 
+  await expect(journey.locator(".cinematic-travel img")).toHaveCount(0);
   await atProgress(page, 0.17);
-  await expect(journey.locator('[data-print="seattle"]')).toHaveCSS("opacity", "1");
-  await expect(journey.locator('[data-print="nashville"]')).toHaveCSS("opacity", "0");
+  await expect(journey.locator('[data-location="seattle"]')).toHaveCSS("opacity", "1");
+  await expect(journey.locator('[data-location="nashville"]')).toHaveCSS("opacity", "0");
 });

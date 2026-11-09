@@ -18,7 +18,7 @@ export async function atProgress(page: Page, progress: number) {
 }
 export async function canvasPixels(page: Page) {
   const png = await page.locator(".desktop-canvas canvas").screenshot({
-    style: ".cinematic-artwork { visibility: hidden !important; }",
+    style: ".cinematic-travel { visibility: hidden !important; }",
   });
   return page.evaluate(async (base64) => {
     const img = new Image();

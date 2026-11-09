@@ -14,12 +14,15 @@ import {
   travelProgress,
 } from "./storyProgress";
 
+import { ARTWORK_OFFSETS } from "./ChapterArtwork";
+
 const OVERVIEWS = [
-  { center: 0.105, in: 0.166, hold: 0.18, out: 0.195, end: 0.216 },
-  { center: 0.3, in: 0.37, hold: 0.387, out: 0.397, end: 0.414 },
-  { center: 0.505, in: 0.577, hold: 0.592, out: 0.601, end: 0.615 },
-  { center: 0.705, in: 0.777, hold: 0.795, out: 0.812, end: 0.835 },
-];
+  { id: "seattle", center: 0.105, in: 0.166, hold: 0.18, out: 0.195, end: 0.216 },
+  { id: "charleston", center: 0.3, in: 0.37, hold: 0.387, out: 0.397, end: 0.414 },
+  { id: "dc", center: 0.505, in: 0.577, hold: 0.592, out: 0.601, end: 0.615 },
+  { id: "nashville", center: 0.705, in: 0.75, hold: 0.774, out: 0.812, end: 0.835 },
+  { id: "future", center: 0.9, in: 0.9, hold: 0.937, out: 1, end: 1.02 },
+] as const;
 
 export function StoryCamera({
   progress,
@@ -65,8 +68,8 @@ export function StoryCamera({
       camera.position.z +=
         (overviewCenter.current.z + 19 - camera.position.z) * weight;
       target.current.x +=
-        (overviewCenter.current.x - target.current.x) * weight;
-      target.current.y += (0.7 - target.current.y) * weight;
+        (overviewCenter.current.x + ARTWORK_OFFSETS[overview.id] * 0.56 - target.current.x) * weight;
+      target.current.y += (2.2 - target.current.y) * weight;
       target.current.z +=
         (overviewCenter.current.z - 1 - target.current.z) * weight;
     }

@@ -75,3 +75,7 @@ The Task 6 production desktop scene bundle is approximately **302 kB gzip / 1.08
 Portable Chromium/SwiftShader verifies actual canvas pixels and public WebGL draw calls at chapter samples. Its ceiling is 250 draw calls and 100,000 triangles **including shadow passes**, rather than comparing total calls to the former 80-main-pass proposal. This is sampled regression coverage, not exhaustive profiling. The earlier single M1 Pro hardware measurements remain single-device evidence, with no FPS/cross-device or measured GPU-memory claim.
 
 The complete-story desktop release ceiling is 320,000 additional gzip bytes, with a separate 410,000-byte total including shared dependencies. The fixed Node zlib level-6 gate measures 299,534 / 383,851 bytes respectively; Vite's own compression implementation estimates 302.01 kB for the isolated scene. The earlier 300 kB Vite target remains slightly missed; the default large-chunk warning is retained. Full shared/Blog/all-output measurements, rationale and remaining profiling limits are in the root README.
+
+## Desktop illustration update
+
+The desktop city artwork uses the same WebP files as the static journey. Each image is positioned beside the Three.js road. Its shader blends away the paper background and reveals the illustration while the pencil traces the existing contours. This replaces the earlier solid landmark geometry in the live story. The road, pencil, abandoned ball, and golden light remain 3D. The earlier renderer measurements describe the original geometry pass.

@@ -54,74 +54,47 @@ test("hardware desktop renders the pencil and ordered continuous 3D chapters", a
   expect((await canvasPixels(page)).green).toBeLessThan(1000);
   expect(errors).toEqual([]);
 });
-test("completed chapter overviews show real landmark geometry and report renderer budgets", async ({
+test("the same mobile illustrations render as world-space meshes beside the pencil", async ({
   page,
 }, testInfo) => {
   await page.goto("/");
   await expect(page.locator("canvas")).toBeVisible();
   const metrics = [];
-  for (const [chapter, p, ids] of [
-    ["seattle", 0.19, ["seattle-needle", "seattle-lake", "seattle-rainier"]],
-    [
-      "charleston",
-      0.392,
-      ["charleston-coast", "charleston-travel", "florida-tournament"],
-    ],
-    ["dc", 0.597, ["dc-gw", "dc-retirement", "dc-patrick"]],
-    [
-      "nashville",
-      0.802,
-      ["nashville-vanderbilt", "nashville-joy", "nashville-immaculate"],
-    ],
+  for (const [chapter, progress] of [
+    ["seattle", 0.19],
+    ["charleston", 0.392],
+    ["dc", 0.592],
+    ["nashville", 0.795],
   ] as const) {
-    await atProgress(page, p);
-    const snapshot = await page.evaluate(async (ids) => {
-      // Inspect the renderer that produced this canvas, not a substitute test scene.
+    await atProgress(page, progress);
+    const poster = await page.locator(`[aria-labelledby="chapter-${chapter}"] img`).getAttribute("src");
+    const snapshot = await page.evaluate(async (chapter) => {
       const moduleURL = performance
         .getEntriesByType("resource")
         .find((entry) => entry.name.includes("/@react-three_fiber.js?"))!.name;
       const { _roots } = await import(moduleURL);
-      const state = _roots
-        .get(document.querySelector("canvas"))
-        .store.getState();
-      const threeURL = performance
-        .getEntriesByType("resource")
-        .find((entry) => entry.name.includes("/three.js?"))!.name;
-      const { Box3, Vector3 } = await import(threeURL);
-      const landmarks = ids.map((id) => {
-        const object = state.scene.getObjectByName(id);
-        const box = new Box3().setFromObject(object);
-        const center = box.getCenter(new Vector3()).project(state.camera);
-        return {
-          id,
-          visible: object.visible,
-          center: [center.x, center.y],
-          volume: object.children[1].scale.y,
-        };
-      });
+      const { scene, camera, gl } = _roots.get(document.querySelector("canvas")).store.getState();
+      const artwork = scene.getObjectByName(`illustration-${chapter}`);
+      const center = artwork.position.clone().project(camera);
       return {
-        calls: state.gl.info.render.calls,
-        triangles: state.gl.info.render.triangles,
-        textures: state.gl.info.memory.textures,
-        geometries: state.gl.info.memory.geometries,
-        landmarks,
+        visible: artwork.visible,
+        reveal: artwork.material.uniforms.reveal.value,
+        artworkUrl: artwork.material.uniforms.illustration.value.image.src,
+        center: [center.x, center.y],
+        triangles: gl.info.render.triangles,
+        calls: gl.info.render.calls,
       };
-    }, ids);
-    for (const landmark of snapshot.landmarks) {
-      expect(landmark.visible).toBe(true);
-      expect(landmark.volume).toBe(1);
-      expect(Math.abs(landmark.center[0])).toBeLessThan(0.9);
-      expect(Math.abs(landmark.center[1])).toBeLessThan(0.9);
-    }
+    }, chapter);
+    expect(snapshot.visible).toBe(true);
+    expect(snapshot.reveal).toBeGreaterThan(1);
+    expect(new URL(snapshot.artworkUrl).pathname).toBe(poster);
+    expect(Math.abs(snapshot.center[0])).toBeLessThan(0.85);
+    expect(Math.abs(snapshot.center[1])).toBeLessThan(0.85);
     expect(snapshot.triangles).toBeGreaterThan(2000);
     expect(snapshot.calls).toBeLessThan(250);
     metrics.push({ chapter, ...snapshot });
     await page.screenshot({ path: `${screenshots}/overview-${chapter}.png` });
   }
-  console.log(
-    "Measured renderer budgets including shadows",
-    JSON.stringify(metrics),
-  );
   await testInfo.attach("scene-budgets", {
     body: JSON.stringify(metrics, null, 2),
     contentType: "application/json",
