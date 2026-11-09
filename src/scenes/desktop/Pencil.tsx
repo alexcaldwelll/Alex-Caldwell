@@ -18,8 +18,13 @@ export const PENCIL_DESIGN = Object.freeze({
     radialSegments: 6,
     roughness: 0.32,
   }),
-  cedar: Object.freeze({ color: "#c99b6b", roughness: 0.85 }),
-  graphite: Object.freeze({ color: "#30302e", roughness: 0.5 }),
+  cedar: Object.freeze({ color: "#c99b6b", length: 0.74, roughness: 0.85 }),
+  graphite: Object.freeze({
+    color: "#30302e",
+    radius: 0.052,
+    length: 0.21,
+    roughness: 0.5,
+  }),
   ferrule: Object.freeze({
     color: "#e1e3df",
     metalness: 0.84,
@@ -60,14 +65,14 @@ export function Pencil({ progress, progressRef }: SceneProgressProps) {
   const design = PENCIL_DESIGN;
   return (
     <group ref={root} position={getPencilPose(progress).position}>
-      <group rotation={[1.24, 0, -0.025]} position={[0, 0.045, 0]}>
+      <group rotation={[1.24, 0, -0.025]} position={[0, 0.045, 0]} scale={0.85}>
         <mesh castShadow position={[0, 3.4, 0]}>
           <cylinderGeometry
             args={[
               design.barrel.radius,
               design.barrel.radius,
               design.barrel.length,
-              6,
+              design.barrel.radialSegments,
             ]}
           />
           <meshStandardMaterial
@@ -79,8 +84,18 @@ export function Pencil({ progress, progressRef }: SceneProgressProps) {
             metalness={0.05}
           />
         </mesh>
-        <mesh castShadow position={[0, 0.59, 0]} rotation={[0, 0, Math.PI]}>
-          <coneGeometry args={[0.235, 0.75, 6]} />
+        <mesh
+          castShadow
+          position={[0, design.graphite.length + design.cedar.length / 2, 0]}
+        >
+          <cylinderGeometry
+            args={[
+              design.barrel.radius,
+              design.graphite.radius,
+              design.cedar.length,
+              design.barrel.radialSegments,
+            ]}
+          />
           <meshStandardMaterial
             color="#ffffff"
             roughness={design.cedar.roughness}
@@ -89,9 +104,20 @@ export function Pencil({ progress, progressRef }: SceneProgressProps) {
             bumpScale={0.012}
           />
         </mesh>
-        <mesh castShadow position={[0, 0.15, 0]} rotation={[0, 0, Math.PI]}>
-          <coneGeometry args={[0.072, 0.3, 12]} />
-          <meshStandardMaterial {...design.graphite} metalness={0.1} />
+        <mesh castShadow position={[0, design.graphite.length / 2, 0]}>
+          <cylinderGeometry
+            args={[
+              design.graphite.radius,
+              0,
+              design.graphite.length,
+              design.barrel.radialSegments,
+            ]}
+          />
+          <meshStandardMaterial
+            color={design.graphite.color}
+            roughness={design.graphite.roughness}
+            metalness={0.1}
+          />
         </mesh>
         {/* Slightly rounded edges and three rolled rings give the metal ferrule its scale. */}
         <mesh castShadow position={[0, 6.08, 0]}>
