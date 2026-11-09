@@ -18,13 +18,16 @@ test('native transitions preserve the shared post title and keep lateral navigat
       return transition;
     }) as typeof document.startViewTransition;
   });
-  await page.goto('/blog');
+  await page.goto('/blog', { waitUntil: 'networkidle' });
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
   // Warm the lazy reader through a real visit; paired content must be ready together.
   await page.getByRole('link', { name: 'A first note — sample post' }).click();
+  await expect(page.getByRole('heading', { name: 'A first note — sample post', exact: true, level: 1 })).toBeVisible();
   await page.getByRole('link', { name: 'Back to Blog' }).click();
   await expect(page).toHaveURL(/\/blog$/);
+  await expect(page.getByRole('heading', { name: 'Blog', exact: true })).toBeVisible();
+  await page.waitForLoadState('networkidle');
   await expect.poll(() => page.evaluate(() => (window as unknown as { pendingTransitions: number }).pendingTransitions)).toBe(0);
   await page.evaluate(() => (window as unknown as { transitionFrames: unknown[] }).transitionFrames = []);
   await page.getByRole('link', { name: 'A first note — sample post' }).click();
@@ -52,7 +55,7 @@ test('an actually suspended Blog route reveals content and unsupported browsers 
     await held;
     await route.continue();
   });
-  await page.goto('/');
+  await page.goto('/', { waitUntil: 'networkidle' });
   await page.getByRole('navigation').getByRole('link', { name: 'Blog' }).click();
   await expect(page.getByRole('status')).toHaveText('Loading notes…');
   release();
