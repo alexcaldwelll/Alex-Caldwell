@@ -1,4 +1,5 @@
 import type { StoryChapter } from "./sceneData";
+
 // This module is arithmetic only. Three/GSAP stay behind the desktop import boundary.
 export const clamp = (value: number) =>
   Number.isFinite(value) ? Math.max(0, Math.min(1, value)) : 0;
@@ -6,186 +7,107 @@ export const ease = (value: number) => {
   const t = clamp(value);
   return t * t * (3 - 2 * t);
 };
-export type MemoryKind =
-  | "needle"
-  | "lake"
-  | "rainier"
-  | "coast"
-  | "travel"
-  | "tournament"
-  | "monument"
-  | "medical"
-  | "patrick"
-  | "vanderbilt"
-  | "joy"
-  | "immaculate"
-  | "possibilities";
-export type MemoryEvent = {
-  id: string;
+
+type ChapterDrawing = {
   chapter: StoryChapter["id"];
-  kind: MemoryKind;
-  start: number;
-  duration: number;
-  side: number;
+  approach: number;
+  draw: number;
+  finish: number;
+  rejoin: number;
+  roadStop: number;
+  leave: number;
+  depart: number;
 };
-export const MEMORY_EVENTS: readonly MemoryEvent[] = [
+
+export const CHAPTER_DRAWINGS: readonly ChapterDrawing[] = [
   {
-    id: "seattle-needle",
     chapter: "seattle",
-    kind: "needle",
-    start: 0.032,
-    duration: 0.044,
-    side: -1,
+    approach: 0.054,
+    draw: 0.077,
+    finish: 0.138,
+    rejoin: 0.168,
+    roadStop: 0.105,
+    leave: 0.183,
+    depart: 0.211,
   },
   {
-    id: "seattle-lake",
-    chapter: "seattle",
-    kind: "lake",
-    start: 0.087,
-    duration: 0.043,
-    side: 1,
-  },
-  {
-    id: "seattle-rainier",
-    chapter: "seattle",
-    kind: "rainier",
-    start: 0.141,
-    duration: 0.038,
-    side: -1,
-  },
-  {
-    id: "charleston-coast",
     chapter: "charleston",
-    kind: "coast",
-    start: 0.223,
-    duration: 0.043,
-    side: 1,
+    approach: 0.264,
+    draw: 0.282,
+    finish: 0.347,
+    rejoin: 0.374,
+    roadStop: 0.303,
+    leave: 0.387,
+    depart: 0.413,
   },
   {
-    id: "charleston-travel",
-    chapter: "charleston",
-    kind: "travel",
-    start: 0.278,
-    duration: 0.041,
-    side: -1,
-  },
-  {
-    id: "florida-tournament",
-    chapter: "charleston",
-    kind: "tournament",
-    start: 0.335,
-    duration: 0.046,
-    side: 1,
-  },
-  {
-    id: "dc-gw",
     chapter: "dc",
-    kind: "monument",
-    start: 0.409,
-    duration: 0.039,
-    side: -1,
+    approach: 0.495,
+    draw: 0.512,
+    finish: 0.563,
+    rejoin: 0.582,
+    roadStop: 0.525,
+    leave: 0.594,
+    depart: 0.622,
   },
   {
-    id: "dc-retirement",
-    chapter: "dc",
-    kind: "medical",
-    start: 0.454,
-    duration: 0.032,
-    side: 1,
-  },
-  {
-    id: "dc-patrick",
-    chapter: "dc",
-    kind: "patrick",
-    start: 0.526,
-    duration: 0.052,
-    side: -1,
-  },
-  {
-    id: "nashville-vanderbilt",
     chapter: "nashville",
-    kind: "vanderbilt",
-    start: 0.614,
-    duration: 0.043,
-    side: -1,
+    approach: 0.664,
+    draw: 0.685,
+    finish: 0.746,
+    rejoin: 0.77,
+    roadStop: 0.705,
+    leave: 0.793,
+    depart: 0.824,
   },
   {
-    id: "nashville-joy",
-    chapter: "nashville",
-    kind: "joy",
-    start: 0.677,
-    duration: 0.042,
-    side: 1,
-  },
-  {
-    id: "nashville-immaculate",
-    chapter: "nashville",
-    kind: "immaculate",
-    start: 0.743,
-    duration: 0.043,
-    side: -1,
-  },
-  {
-    id: "future-possibilities",
     chapter: "future",
-    kind: "possibilities",
-    start: 0.85,
-    duration: 0.08,
-    side: 1,
+    approach: 0.85,
+    draw: 0.875,
+    finish: 0.94,
+    rejoin: 0.968,
+    roadStop: 0.901,
+    leave: 1,
+    depart: 1.02,
   },
 ];
-export function memoryPhase(event: MemoryEvent, progress: number) {
-  return clamp((progress - event.start) / event.duration);
-}
-export function memoryStrokes(event: MemoryEvent, progress: number) {
-  return (
-    clamp((memoryPhase(event, progress) - 0.16) / 0.39) *
-    (event.chapter === "future" ? 0.72 : 1)
+
+export function activeDrawing(progress: number) {
+  return CHAPTER_DRAWINGS.find(
+    ({ approach, rejoin }) => progress > approach && progress < rejoin,
   );
 }
-export function getMemoryState(event: MemoryEvent, progress: number) {
-  const phase = memoryPhase(event, progress);
-  return {
-    strokes: memoryStrokes(event, progress),
-    volume:
-      ease((phase - 0.53) / 0.32) * (event.chapter === "future" ? 0.24 : 1),
-  };
+
+export function drawingWeight(drawing: ChapterDrawing, progress: number) {
+  return (
+    ease((progress - drawing.approach) / (drawing.draw - drawing.approach)) *
+    (1 - ease((progress - drawing.finish) / (drawing.rejoin - drawing.finish)))
+  );
 }
-// A monotonic distance clock with a true dwell while the pencil traces each memory.
+
+export function sweepProgress(drawing: ChapterDrawing, progress: number) {
+  return ease((progress - drawing.draw) / (drawing.finish - drawing.draw));
+}
+
+/** Advance along the road, holding its position while the pencil works off-road. */
 export function travelProgress(progress: number) {
   const p = clamp(progress);
-  for (const event of MEMORY_EVENTS) {
-    if (p < event.start || p > event.start + event.duration) continue;
-    const t = memoryPhase(event, p);
-    const mapped =
-      t < 0.22
-        ? 0.5 * ease(t / 0.22)
-        : t < 0.62
-          ? 0.5
-          : 0.5 + 0.5 * ease((t - 0.62) / 0.38);
-    return event.start + event.duration * mapped;
-  }
-  return p;
+  const drawing = activeDrawing(p);
+  if (!drawing) return p;
+  const { approach, draw, finish, rejoin, roadStop } = drawing;
+  if (p < draw)
+    return approach + (roadStop - approach) * ease((p - approach) / (draw - approach));
+  if (p > finish)
+    return roadStop + (rejoin - roadStop) * ease((p - finish) / (rejoin - finish));
+  return roadStop;
 }
-export function activeMemory(progress: number) {
-  for (const event of MEMORY_EVENTS)
-    if (progress > event.start && progress < event.start + event.duration)
-      return event;
-  return null;
-}
-export function drawingWeight(event: MemoryEvent, progress: number) {
-  const t = memoryPhase(event, progress);
-  // Arrive on the contour before memoryStrokes starts at phase 0.16.
-  return ease(t / 0.16) * (1 - ease((t - 0.62) / 0.38));
-}
+
 export function getStoryState(progress: number) {
   const p = clamp(progress);
   return {
-    chapter: (["seattle", "charleston", "dc", "nashville", "future"] as const)[
-      Math.min(4, Math.floor(p * 5))
-    ],
+    chapter: CHAPTER_DRAWINGS[Math.min(4, Math.floor(p * 5))].chapter,
     road: ease(p / 0.045),
-    memory: activeMemory(p)?.id ?? null,
+    drawing: activeDrawing(p)?.chapter ?? null,
     route: travelProgress(p) <= 0.48 ? "soccer" : "new-road",
     ballAbandoned: p > 0.49,
     faith: ease((p - 0.525) / 0.035),

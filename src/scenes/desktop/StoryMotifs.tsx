@@ -6,11 +6,13 @@ import {
   writeStoryPosition,
   type SceneProgressProps,
 } from "./route";
-import { MEMORY_PLACEMENTS } from "./memoryRoute";
 import { ease, travelProgress } from "./storyProgress";
 import { SoccerBall } from "./Landmarks";
 
-const ball = ROAD_ROUTES[0].curve.getPoint(0.535);
+const ball = ROAD_ROUTES[0].curve.getPoint(0.535).setY(0.02);
+const ballRelease = ROAD_ROUTES[0].curve
+  .getPoint(0.47)
+  .add(new Vector3(2.95, 1.3, -1.7));
 export function StoryMotifs({ progress, progressRef }: SceneProgressProps) {
   const faith = useRef<Group>(null),
     abandoned = useRef<Group>(null),
@@ -19,13 +21,8 @@ export function StoryMotifs({ progress, progressRef }: SceneProgressProps) {
     const p = progressRef?.current ?? progress;
     if (abandoned.current) {
       abandoned.current.visible = p > 0.462 && p < 0.67;
-      const t = ease((p - 0.477) / 0.014),
-        origin = MEMORY_PLACEMENTS["dc-retirement"];
-      abandoned.current.position.set(
-        (origin[0] - 1.55) * (1 - t) + ball.x * t,
-        1.3 * (1 - t) + 0.02 * t,
-        origin[2] * (1 - t) + ball.z * t,
-      );
+      const t = ease((p - 0.477) / 0.014);
+      abandoned.current.position.lerpVectors(ballRelease, ball, t);
     }
     if (faith.current) {
       const strength = ease((p - 0.525) / 0.035);
@@ -44,7 +41,7 @@ export function StoryMotifs({ progress, progressRef }: SceneProgressProps) {
       <group
         ref={abandoned}
         visible={false}
-        position={[ball.x, 0.02, ball.z]}
+        position={ball}
         name="abandoned-soccer-ball"
       >
         <SoccerBall />

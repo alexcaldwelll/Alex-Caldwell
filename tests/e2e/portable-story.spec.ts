@@ -42,14 +42,32 @@ test('portable software WebGL draws actual pencil and chapter pixels within tota
     return extension ? String(gl.getParameter(extension.UNMASKED_RENDERER_WEBGL)) : String(gl.getParameter(gl.RENDERER));
   });
   await expect.poll(async () => (await canvasPixels(page)).yellow).toBeGreaterThan(9000);
+  const pigment = ({ dark, green, blue }: Awaited<ReturnType<typeof canvasPixels>>) =>
+    dark + green + blue;
+  const drawingSamples = { seattle: 0.108, dc: 0.539 } as const;
+  const record = async (label: string) => {
+    const png = await page.screenshot();
+    await testInfo.attach(label, { body: png, contentType: 'image/png' });
+  };
   const metrics = [];
-  for (const [chapter, progress] of [['seattle', 0.19], ['charleston', 0.392], ['dc', 0.597], ['nashville', 0.795], ['future', 0.93]] as const) {
+  for (const [chapter, progress] of [['seattle', 0.19], ['charleston', 0.392], ['dc', 0.597], ['nashville', 0.795], ['future', 0.965]] as const) {
+    let drawingPigment = 0;
+    if (chapter === 'seattle' || chapter === 'dc') {
+      await atProgress(page, drawingSamples[chapter]);
+      drawingPigment = pigment(await canvasPixels(page));
+      await record(`${chapter}-drawing`);
+    }
     await atProgress(page, progress);
     await expect(page.locator('.cinematic-journey')).toHaveAttribute('data-chapter', chapter);
     await page.evaluate(() => { window.storyFrames = []; });
     await expect.poll(() => page.evaluate(() => window.storyFrames.length)).toBeGreaterThan(2);
     const pixels = await canvasPixels(page);
-    expect(pixels.dark + pixels.green + pixels.blue).toBeGreaterThan(500);
+    expect(pigment(pixels)).toBeGreaterThan(500);
+    if (chapter === 'seattle' || chapter === 'dc') {
+      expect(drawingPigment).toBeGreaterThan(500);
+      expect(pigment(pixels)).toBeGreaterThan(drawingPigment * 1.2);
+      await record(`${chapter}-completed`);
+    }
     if (chapter === 'seattle' || chapter === 'nashville') expect(pixels.green).toBeGreaterThan(200);
     const frames = await page.evaluate(() => window.storyFrames);
     const calls = Math.max(...frames.map(frame => frame.calls));

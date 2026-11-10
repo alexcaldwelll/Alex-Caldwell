@@ -8,7 +8,7 @@ import {
 } from "react";
 import { Canvas } from "@react-three/fiber";
 import { ACESFilmicToneMapping } from "three";
-import { ChapterScene } from "./ChapterScene";
+import { ChapterArtwork } from "./ChapterArtwork";
 import { StoryMotifs } from "./StoryMotifs";
 import { STORY_CHAPTERS } from "./sceneData";
 import { Pencil } from "./Pencil";
@@ -17,13 +17,12 @@ import { StoryCamera } from "./StoryCamera";
 import { ResourceLifecycle } from "./ResourceLifecycle";
 import { SceneLighting } from "./SceneLighting";
 import { OpeningPoster } from "./OpeningPoster";
-import type { ProgressRef, SceneProgressProps } from "./route";
+import type { SceneProgressProps } from "./route";
 import "./desktop-story.css";
 
 export type StoryCanvasProps = SceneProgressProps & {
   reducedMotion: boolean;
   onContextFailure?: () => void;
-  memoryOffsetRef?: ProgressRef;
   children?: ReactNode;
 };
 
@@ -48,7 +47,6 @@ export function StoryCanvas({
   progressRef,
   reducedMotion,
   onContextFailure,
-  memoryOffsetRef,
   children,
 }: StoryCanvasProps) {
   const [failed, setFailed] = useState(false);
@@ -97,10 +95,9 @@ export function StoryCanvas({
               <StoryCamera
                 progress={progress}
                 progressRef={progressRef}
-                memoryOffsetRef={memoryOffsetRef}
               />
               {STORY_CHAPTERS.map((chapter) => (
-                <ChapterScene
+                <ChapterArtwork
                   key={chapter.id}
                   chapter={chapter}
                   progress={progress}

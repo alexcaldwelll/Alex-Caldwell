@@ -2,10 +2,11 @@ import { useEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Group, Vector3 } from "three";
 import { createPencilSurface } from "../../assets/scenes/pencilSurface";
-import { writePencilPosition } from "./memoryRoute";
+import { ARTWORK_DRAWINGS, artworkFraming, writePencilPosition } from "./artworkDrawing";
+import { activeDrawing, drawingWeight, travelProgress } from "./storyProgress";
 import {
   clampProgress,
-  sampleStoryRoute,
+  writeStoryPosition,
   type SceneProgressProps,
 } from "./route";
 
@@ -34,7 +35,7 @@ export const PENCIL_DESIGN = Object.freeze({
 });
 
 export function getPencilPose(progress: number) {
-  return { position: sampleStoryRoute(progress), tilt: 1.24, heading: 0 };
+  return { position: writePencilPosition(progress, new Vector3(), new Vector3()).toArray(), tilt: 1.24, heading: 0 };
 }
 
 export function Pencil({ progress, progressRef }: SceneProgressProps) {
@@ -49,23 +50,38 @@ export function Pencil({ progress, progressRef }: SceneProgressProps) {
     [lacquer, cedar],
   );
   const position = useRef(new Vector3());
+  const contact = useRef(new Vector3());
+  const road = useRef(new Vector3());
   const ahead = useRef(new Vector3());
   useFrame(() => {
     if (!root.current) return;
     const p = clampProgress(progressRef?.current ?? progress);
-    writePencilPosition(p, position.current);
-    writePencilPosition(Math.min(1, p + 0.0002), ahead.current);
+    writePencilPosition(p, position.current, contact.current);
     root.current.position.copy(position.current);
-    // A tiny lead prevents jitter at the route end; no geometry or materials change.
-    const dx = ahead.current.x - position.current.x;
-    const dz = ahead.current.z - position.current.z;
-    if (dx * dx + dz * dz > 0.000001)
-      root.current.rotation.y = Math.atan2(-dx, -dz);
+
+    const routeProgress = travelProgress(p);
+    writeStoryPosition(Math.min(routeProgress, 0.9998), road.current);
+    writeStoryPosition(Math.min(1, routeProgress + 0.0002), ahead.current);
+    const dx = ahead.current.x - road.current.x;
+    const dz = ahead.current.z - road.current.z;
+    let roadHeading = Math.atan2(-dx, -dz);
+    // Keep the barrel visible from the city camera as the pencil rejoins the road.
+    for (const artwork of ARTWORK_DRAWINGS) {
+      const framing = artworkFraming(artwork, p);
+      if (framing <= 0) continue;
+      const restHeading = -Math.sign(artwork.side) * 0.72;
+      roadHeading += (restHeading - roadHeading) * framing;
+      break;
+    }
+    const drawing = activeDrawing(p);
+    const weight = drawing ? drawingWeight(drawing, p) : 0;
+    // Hold the barrel toward the viewer while the graphite moves across the illustration.
+    root.current.rotation.y = roadHeading + (-0.72 - roadHeading) * weight;
   });
   const design = PENCIL_DESIGN;
   return (
-    <group ref={root} position={getPencilPose(progress).position}>
-      <group rotation={[1.24, 0, -0.025]} position={[0, 0.045, 0]} scale={0.85}>
+    <group ref={root} name="pencil-graphite-tip" position={getPencilPose(progress).position}>
+      <group rotation={[1.24, 0, -0.025]} scale={0.85}>
         <mesh castShadow position={[0, 3.4, 0]}>
           <cylinderGeometry
             args={[

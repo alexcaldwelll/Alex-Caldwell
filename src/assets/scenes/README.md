@@ -56,7 +56,7 @@ Resource ownership: React Three Fiber owns and disposes declarative geometries, 
 
 ## Original desktop chapter artwork (Task 6)
 
-- `memorySketches.ts` contains original, hand-authored XYZ contour coordinates for the Space Needle, lake/high dive, Rainier, palm coast, travel car, tournament goal, Washington Monument, medical transition, churches, Vanderbilt, running/food/music and unfinished possibilities. The same contours guide the pencil tip and the graphite reveal; the future contour stops at 72% completion.
+- The original desktop pass used hand-authored XYZ contour coordinates to guide the pencil tip and reveal graphite sketches of each memory. The future contour stopped at 72% completion.
 - `Landmarks.tsx` builds original interpretive landmarks, trees, water, soccer fields, small people, food and music objects from numerical Three.js primitives. These are simplified story illustrations, not measured architectural reproductions. `StoryMotifs.tsx` authors the airplane, abandoned ball and continuing golden light. No reference-site models, geometry, images or effects were copied.
 - `pencilSurface.ts` generates two deterministic 128 × 256 RGBA textures from arithmetic: cedar grain and lacquer micrograin, 128 KiB each before mipmaps. There are no external texture files or downloads. Both textures are explicitly disposed on pencil unmount.
 - `SceneLighting.tsx` uses the installed Three.js `RoomEnvironment` helper to generate local studio reflections through PMREM, then disposes its temporary geometry/generator and the retained render target on unmount. This bundled Three.js helper is library code under the dependency's MIT license, not downloaded environment artwork. One directional light casts a 1024 × 1024 shadow; the faith point light does not cast shadows.
@@ -78,4 +78,4 @@ The complete-story desktop release ceiling is 320,000 additional gzip bytes, wit
 
 ## Desktop illustration update
 
-The desktop city artwork uses the same WebP files as the static journey. Each image is positioned beside the Three.js road. Its shader blends away the paper background and reveals the illustration while the pencil traces the existing contours. This replaces the earlier solid landmark geometry in the live story. The road, pencil, abandoned ball, and golden light remain 3D. The earlier renderer measurements describe the original geometry pass.
+The desktop city artwork uses the same WebP files as the static journey. Each image is positioned beside the Three.js road. Its shader blends away the paper background and uses the graphite tip’s position on the image plane to reveal the illustration. The camera holds a near-front view while the pencil draws and rejoins the road. The future illustration supplies the unfinished graphite details. The road, pencil, abandoned ball, and golden light remain 3D. The earlier renderer measurements describe the original geometry pass.

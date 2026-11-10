@@ -1,12 +1,9 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Mesh, ShaderMaterial, SRGBColorSpace, TextureLoader } from "three";
-import { sampleStoryRoute, type SceneProgressProps } from "./route";
+import type { SceneProgressProps } from "./route";
 import type { StoryChapter } from "./sceneData";
-import { ease, MEMORY_EVENTS } from "./storyProgress";
-
-export const ARTWORK_OFFSETS = { seattle: -7, charleston: 7, dc: 7, nashville: 7, future: 7 };
-const ARTWORK_CENTERS = { seattle: 0.105, charleston: 0.3, dc: 0.505, nashville: 0.705, future: 0.9 };
+import { artworkDrawing, artworkOpacity, inkFront, SWEEP_FEATHER } from "./artworkDrawing";
 
 const vertexShader = `
   varying vec2 paperUv;
@@ -19,6 +16,9 @@ const vertexShader = `
 const fragmentShader = `
   uniform sampler2D illustration;
   uniform float reveal;
+  uniform float contactV;
+  uniform float bow;
+  uniform float opacity;
   varying vec2 paperUv;
   void main() {
     vec3 ink = texture2D(illustration, paperUv).rgb;
@@ -30,9 +30,9 @@ const fragmentShader = `
     // Key out the original cream paper while retaining soft shadows and graphite.
     float pigment = smoothstep(0.025, 0.17, length(ink - paper));
     vec2 edge = smoothstep(vec2(0.0), vec2(0.08), min(paperUv, 1.0 - paperUv));
-    float stroke = paperUv.x * 0.65 + paperUv.y * 0.35;
-    float painted = smoothstep(stroke - 0.09, stroke + 0.09, reveal);
-    gl_FragColor = vec4(ink, pigment * edge.x * edge.y * painted);
+    float stroke = paperUv.x + bow * pow(abs(paperUv.y - contactV), 1.45);
+    float painted = 1.0 - smoothstep(reveal - ${SWEEP_FEATHER}, reveal + ${SWEEP_FEATHER}, stroke);
+    gl_FragColor = vec4(ink, pigment * edge.x * edge.y * painted * opacity);
     #include <colorspace_fragment>
   }
 `;
@@ -47,13 +47,12 @@ export function ChapterArtwork({
   const uniforms = useMemo(() => ({
     illustration: { value: null },
     reveal: { value: 0 },
+    contactV: { value: 0 },
+    bow: { value: 0 },
+    opacity: { value: 0 },
   }), []);
-  const { id, poster, posterWidth, posterHeight, progressEnd } = chapter;
-  const center = ARTWORK_CENTERS[id];
-  const [x, , z] = sampleStoryRoute(center);
-  const width = id === "future" ? 14 : 17;
-  const height = width * posterHeight / posterWidth;
-  const firstMemory = MEMORY_EVENTS.find((event) => event.chapter === id)!;
+  const { id, poster } = chapter;
+  const drawing = artworkDrawing(id);
 
   useEffect(() => {
     const shader = material.current!;
@@ -71,11 +70,14 @@ export function ChapterArtwork({
     if (!mesh.current || !material.current) return;
     const uniforms = material.current.uniforms;
     const p = progressRef?.current ?? progress;
-    const texture = uniforms.illustration.value;
-    const start = firstMemory.start + firstMemory.duration * 0.32;
-    mesh.current.visible = !!texture?.image && p > start && p < progressEnd + 0.045;
-    if (mesh.current.visible)
-      uniforms.reveal.value = 1.12 * ease((p - start) / (id === "future" ? 0.09 : 0.115));
+    const opacity = artworkOpacity(drawing, p);
+    mesh.current.visible = !!uniforms.illustration.value?.image && p > drawing.draw && opacity > 0;
+    if (!mesh.current.visible) return;
+    const { u, v, bow } = inkFront(drawing, p);
+    uniforms.reveal.value = u;
+    uniforms.contactV.value = v;
+    uniforms.bow.value = bow;
+    uniforms.opacity.value = opacity;
   });
 
   return (
@@ -83,10 +85,10 @@ export function ChapterArtwork({
       ref={mesh}
       name={`illustration-${id}`}
       visible={false}
-      position={[x + ARTWORK_OFFSETS[id], height * 0.42, z - 2.5]}
-      rotation={[-0.24, 0.14, 0]}
+      matrix={drawing.matrix}
+      matrixAutoUpdate={false}
     >
-      <planeGeometry args={[width, height]} />
+      <planeGeometry args={[drawing.width, drawing.height]} />
       <shaderMaterial
         ref={material}
         uniforms={uniforms}

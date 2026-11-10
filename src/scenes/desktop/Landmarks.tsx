@@ -1,5 +1,8 @@
 import type { ReactNode } from "react";
-import type { MemoryKind } from "./storyProgress";
+type LandmarkKind =
+  | "needle" | "lake" | "rainier" | "coast" | "travel" | "tournament"
+  | "monument" | "medical" | "patrick" | "vanderbilt" | "joy" | "immaculate"
+  | "possibilities";
 
 const C = {
   green: "#48715c",
@@ -332,7 +335,7 @@ function MusicFood() {
     </group>
   );
 }
-export function Landmark({ kind }: { kind: MemoryKind }): ReactNode {
+export function Landmark({ kind }: { kind: LandmarkKind }): ReactNode {
   switch (kind) {
     case "needle":
       return (
