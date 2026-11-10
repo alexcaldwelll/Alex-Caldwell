@@ -124,27 +124,67 @@ test("actual WebGL draw calls stop offscreen/hidden and cleanly resume", async (
   await expect(page.locator("html")).not.toHaveClass(/lenis/);
 });
 
-test("each city has a reversible arrival flight and a location-only label", async ({ page }) => {
+test("ink silhouettes fly only between cities and reverse with scroll", async ({ page }) => {
+  await page.goto("/");
+  const journey = page.locator(".cinematic-journey");
+  await expect(journey.locator("canvas")).toBeVisible();
+  const planes = journey.locator("[data-flight]");
+  const expectNoFlight = async () => {
+    for (const plane of await planes.all()) {
+      await expect(plane).toHaveCSS("opacity", "0");
+    }
+  };
+
+  await expect(planes).toHaveCount(3);
+  await expect(journey.locator('[data-flight="seattle"]')).toHaveCount(0);
+  for (const progress of [0, 0.03, 0.1]) {
+    await atProgress(page, progress);
+    await expectNoFlight();
+  }
+
+  for (const [id, earlier, later, drawing] of [
+    ["charleston", 0.228, 0.247, 0.31],
+    ["dc", 0.439, 0.469, 0.54],
+    ["nashville", 0.636, 0.65, 0.72],
+  ] as const) {
+    const plane = journey.locator(`[data-flight="${id}"]`);
+    const silhouette = plane.locator("path");
+    await expect(silhouette).toHaveCount(1);
+    await expect(silhouette).toHaveCSS("fill", "rgb(60, 52, 48)");
+    await expect(silhouette).toHaveCSS("stroke", "none");
+
+    await atProgress(page, later);
+    await expect(plane).toHaveCSS("opacity", "1");
+    const laterX = (await plane.boundingBox())!.x;
+    expect(laterX).toBeLessThan(page.viewportSize()!.width);
+
+    await atProgress(page, drawing);
+    await expectNoFlight();
+
+    await atProgress(page, earlier);
+    await expect(plane).toHaveCSS("opacity", "1");
+    const earlierX = (await plane.boundingBox())!.x;
+    expect(earlierX).toBeGreaterThan(0);
+    expect(earlierX).toBeLessThan(laterX);
+  }
+
+  await atProgress(page, 0.17);
+  await expectNoFlight();
+});
+
+test("city labels retain their text and timing independently of flights", async ({ page }) => {
   await page.goto("/");
   const journey = page.locator(".cinematic-journey");
   await expect(journey.locator("canvas")).toBeVisible();
 
-  for (const [id, name, start] of [
-    ["seattle", "Seattle", 0],
-    ["charleston", "Charleston", 0.2],
-    ["dc", "Washington, DC", 0.4],
-    ["nashville", "Nashville", 0.6],
+  for (const [id, name, progress] of [
+    ["seattle", "Seattle", 0.18],
+    ["charleston", "Charleston", 0.38],
+    ["dc", "Washington, DC", 0.58],
+    ["nashville", "Nashville", 0.78],
   ] as const) {
-    const plane = journey.locator(`[data-flight="${id}"]`);
     const label = journey.locator(`[data-location="${id}"]`);
-    await atProgress(page, start + 0.03);
-    await expect(plane).toHaveCSS("opacity", "1");
-    const position = await plane.boundingBox();
-    expect(position?.x).toBeGreaterThan(0);
-    expect(position?.x).toBeLessThan(page.viewportSize()!.width);
-
-    await atProgress(page, start + 0.18);
-    await expect(plane).toHaveCSS("opacity", "0");
+    await atProgress(page, progress);
     await expect(label).toHaveCSS("opacity", "1");
     await expect(label).toHaveText(name);
   }

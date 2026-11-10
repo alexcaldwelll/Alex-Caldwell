@@ -3,7 +3,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
 import "lenis/dist/lenis.css";
-import { getStoryState } from "./storyProgress";
+import { CHAPTER_DRAWINGS, getStoryState } from "./storyProgress";
 import { STORY_CHAPTERS } from "./sceneData";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -15,25 +15,35 @@ function createTravelTimeline(container: HTMLElement) {
     const start = chapter.progressStart;
     const span = chapter.progressEnd - start;
     const label = container.querySelector(`[data-location="${chapter.id}"]`);
-    const plane = container.querySelector(`[data-flight="${chapter.id}"]`);
-    if (!plane || !label) continue;
+    if (!label) continue;
 
     timeline
+      .to(label, { opacity: 1, duration: span * 0.16 }, start + span * 0.24)
+      .to(label, { opacity: 0, duration: span * 0.02 }, start + span * 0.98);
+  }
+
+  for (let i = 1; i < CHAPTER_DRAWINGS.length; i++) {
+    const drawing = CHAPTER_DRAWINGS[i];
+    const plane = container.querySelector(`[data-flight="${drawing.chapter}"]`);
+    if (!plane) continue;
+    const start = CHAPTER_DRAWINGS[i - 1].depart;
+    const end = drawing.approach;
+    timeline
+      .set(plane, { opacity: 1 }, start)
       .fromTo(
         plane,
-        { x: 0, y: 0, rotation: -7, opacity: 1 },
+        { x: 0, y: 0, rotation: -7 },
         {
           x: "120vw",
           y: "-12vh",
           rotation: -14,
-          duration: span * 0.29,
+          duration: end - start,
           ease: "none",
+          immediateRender: false,
         },
-        start + span * 0.025,
+        start,
       )
-      .set(plane, { opacity: 0 }, start + span * 0.315)
-      .to(label, { opacity: 1, duration: span * 0.16 }, start + span * 0.24)
-      .to(label, { opacity: 0, duration: span * 0.02 }, start + span * 0.98);
+      .set(plane, { opacity: 0 }, end);
   }
   return timeline;
 }

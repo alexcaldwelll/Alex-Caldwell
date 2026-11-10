@@ -19,6 +19,7 @@ const fragmentShader = `
   uniform float contactV;
   uniform float bow;
   uniform float opacity;
+  uniform float maskCharlestonFlight;
   varying vec2 paperUv;
   void main() {
     vec3 ink = texture2D(illustration, paperUv).rgb;
@@ -32,7 +33,11 @@ const fragmentShader = `
     vec2 edge = smoothstep(vec2(0.0), vec2(0.08), min(paperUv, 1.0 - paperUv));
     float stroke = paperUv.x + bow * pow(abs(paperUv.y - contactV), 1.45);
     float painted = 1.0 - smoothstep(reveal - ${SWEEP_FEATHER}, reveal + ${SWEEP_FEATHER}, stroke);
-    gl_FragColor = vec4(ink, pigment * edge.x * edge.y * painted * opacity);
+    // The Charleston plane and contrails occupy an otherwise blank patch of sky.
+    vec2 flightPatch = smoothstep(vec2(0.39, 0.744), vec2(0.40, 0.754), paperUv)
+      * (1.0 - smoothstep(vec2(0.657, 0.869), vec2(0.667, 0.879), paperUv));
+    float retained = 1.0 - maskCharlestonFlight * flightPatch.x * flightPatch.y;
+    gl_FragColor = vec4(ink, pigment * edge.x * edge.y * painted * opacity * retained);
     #include <colorspace_fragment>
   }
 `;
@@ -44,14 +49,15 @@ export function ChapterArtwork({
 }: SceneProgressProps & { chapter: StoryChapter }) {
   const mesh = useRef<Mesh>(null);
   const material = useRef<ShaderMaterial>(null);
+  const { id, poster } = chapter;
   const uniforms = useMemo(() => ({
     illustration: { value: null },
     reveal: { value: 0 },
     contactV: { value: 0 },
     bow: { value: 0 },
     opacity: { value: 0 },
-  }), []);
-  const { id, poster } = chapter;
+    maskCharlestonFlight: { value: id === "charleston" ? 1 : 0 },
+  }), [id]);
   const drawing = artworkDrawing(id);
 
   useEffect(() => {

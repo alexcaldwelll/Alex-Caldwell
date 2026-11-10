@@ -53,15 +53,7 @@
   left: -8rem;
   width: clamp(3.5rem, 7vw, 7rem);
   opacity: 0;
-  fill: #f8eed9;
-  stroke: #514a3e;
-  stroke-width: 2;
-  stroke-linejoin: round;
-  filter: drop-shadow(0 0.35rem 0.35rem rgb(65 53 35 / 0.2));
-}
-.cinematic-plane-detail {
-  fill: none;
-  stroke: #b08e54;
+  fill: var(--color-ink);
 }
 .story-opening:has(.cinematic-journey) + .static-journey {
   position: absolute;
