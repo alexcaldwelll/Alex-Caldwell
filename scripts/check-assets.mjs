@@ -3,7 +3,7 @@ import { dirname, extname, relative, resolve } from 'node:path';
 import { assetReferences } from './asset-references.mjs';
 
 // Decimal bytes/kB, decoded pixels; these are delivery limits, not GPU/FPS claims.
-const limits = { rasterBytes: 200_000, rasterPixels: 2_000_000, geometryBytes: 1_000_000, fontBytes: 150_000, sceneBytes: 1_200_000, totalRasterBytes: 900_000 };
+const limits = { rasterBytes: 200_000, rasterPixels: 2_000_000, geometryBytes: 1_000_000, fontBytes: 150_000, sceneBytes: 1_200_000, totalRasterBytes: 2_900_000 };
 const media = /\.(?:webp|png|jpe?g|gif|avif|svg|glb|gltf|bin|woff2?|ttf|otf|hdr|ktx2?)$/i;
 const raster = /\.(?:webp|png|jpe?g|gif|avif)$/i;
 const font = /\.(?:woff2?|ttf|otf)$/i;

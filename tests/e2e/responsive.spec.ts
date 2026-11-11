@@ -40,5 +40,5 @@ test('narrow reader contains real long unbroken title, tag, link and code conten
 
 test('desktop remains eligible for the cinematic canvas', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('.desktop-canvas canvas')).toBeVisible();
+  await expect(page.locator('.road-stage canvas')).toBeVisible();
 });

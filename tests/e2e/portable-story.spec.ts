@@ -1,86 +1,31 @@
-import { expect, test } from '@playwright/test';
-import { atProgress, canvasPixels } from './story-helpers';
+import { expect, test } from "@playwright/test";
+import { atStop, layers } from "./story-helpers";
 
-type Frame = { calls: number; triangles: number };
-declare global { interface Window { storyFrames: Frame[] } }
-
-test('portable software WebGL draws actual pencil and chapter pixels within total-pass budgets', async ({ page }, testInfo) => {
-  // Software rendering and pixel reads across five chapters can exceed the suite timeout in CI.
-  test.setTimeout(120_000);
-
-  // Observe public WebGL calls on the actual site canvas. No private R3F imports,
-  // substitute scene, screenshot of a poster, or fallback-as-success branch.
-  await page.addInitScript(() => {
-    window.storyFrames = [];
-    let calls = 0, triangles = 0;
-    const count = (mode: number, vertices: number, instances = 1) => {
-      calls++;
-      if (mode === 4) triangles += vertices / 3 * instances;
-      else if (mode === 5 || mode === 6) triangles += Math.max(0, vertices - 2) * instances;
-    };
-    const proto = WebGL2RenderingContext.prototype;
-    const elements = proto.drawElements, arrays = proto.drawArrays;
-    const instancedElements = proto.drawElementsInstanced, instancedArrays = proto.drawArraysInstanced;
-    proto.drawElements = function (mode, vertices, type, offset) { count(mode, vertices); return elements.call(this, mode, vertices, type, offset); };
-    proto.drawArrays = function (mode, first, vertices) { count(mode, vertices); return arrays.call(this, mode, first, vertices); };
-    proto.drawElementsInstanced = function (mode, vertices, type, offset, instances) { count(mode, vertices, instances); return instancedElements.call(this, mode, vertices, type, offset, instances); };
-    proto.drawArraysInstanced = function (mode, first, vertices, instances) { count(mode, vertices, instances); return instancedArrays.call(this, mode, first, vertices, instances); };
-    const sample = () => {
-      if (calls) { window.storyFrames.push({ calls, triangles }); if (window.storyFrames.length > 120) window.storyFrames.shift(); }
-      calls = 0; triangles = 0;
-      requestAnimationFrame(sample);
-    };
-    requestAnimationFrame(sample);
-  });
-  const errors: string[] = [];
-  page.on('pageerror', error => errors.push(error.message));
-  await page.goto('/');
-  await expect(page.locator('.desktop-canvas canvas')).toBeVisible();
-  const renderer = await page.locator('canvas').evaluate(canvas => {
-    const gl = (canvas as HTMLCanvasElement).getContext('webgl2')!;
-    const extension = gl.getExtension('WEBGL_debug_renderer_info');
-    return extension ? String(gl.getParameter(extension.UNMASKED_RENDERER_WEBGL)) : String(gl.getParameter(gl.RENDERER));
-  });
-  await expect.poll(async () => (await canvasPixels(page)).yellow).toBeGreaterThan(9000);
-  const pigment = ({ dark, green, blue }: Awaited<ReturnType<typeof canvasPixels>>) =>
-    dark + green + blue;
-  const drawingSamples = { seattle: 0.108, dc: 0.539 } as const;
-  const record = async (label: string) => {
-    const png = await page.screenshot();
-    await testInfo.attach(label, { body: png, contentType: 'image/png' });
-  };
-  const metrics = [];
-  for (const [chapter, progress] of [['seattle', 0.19], ['charleston', 0.392], ['dc', 0.597], ['nashville', 0.795], ['future', 0.965]] as const) {
-    let drawingPigment = 0;
-    if (chapter === 'seattle' || chapter === 'dc') {
-      await atProgress(page, drawingSamples[chapter]);
-      drawingPigment = pigment(await canvasPixels(page));
-      await record(`${chapter}-drawing`);
-    }
-    await atProgress(page, progress);
-    await expect(page.locator('.cinematic-journey')).toHaveAttribute('data-chapter', chapter);
-    await page.evaluate(() => { window.storyFrames = []; });
-    await expect.poll(() => page.evaluate(() => window.storyFrames.length)).toBeGreaterThan(2);
-    const pixels = await canvasPixels(page);
-    expect(pigment(pixels)).toBeGreaterThan(500);
-    if (chapter === 'seattle' || chapter === 'dc') {
-      expect(drawingPigment).toBeGreaterThan(500);
-      expect(pigment(pixels)).toBeGreaterThan(drawingPigment * 1.2);
-      await record(`${chapter}-completed`);
-    }
-    if (chapter === 'seattle' || chapter === 'nashville') expect(pixels.green).toBeGreaterThan(200);
-    const frames = await page.evaluate(() => window.storyFrames);
-    const calls = Math.max(...frames.map(frame => frame.calls));
-    const triangles = Math.max(...frames.map(frame => frame.triangles));
-    expect(calls).toBeLessThanOrEqual(250);
-    expect(triangles).toBeLessThanOrEqual(100_000);
-    expect(triangles).toBeGreaterThan(2000);
-    metrics.push({ chapter, callsIncludingShadows: calls, trianglesIncludingShadows: triangles, pixels });
-  }
-  await atProgress(page, 0);
-  expect((await canvasPixels(page)).green).toBeLessThan(1000);
-  expect(errors).toEqual([]);
-  const evidence = { mode: 'portable functional software-WebGL, not a hardware performance benchmark', renderer, metrics };
-  console.log(JSON.stringify(evidence));
-  await testInfo.attach('portable-webgl', { body: JSON.stringify(evidence, null, 2), contentType: 'application/json' });
+test("the pencil follows the reveal edge and previous layers persist until the flight", async ({ page }) => {
+  await page.goto("/");
+  await atStop(page, "seattle", 2.95);
+  const visible = layers(page, "seattle");
+  await expect(visible).toHaveCount(3);
+  await expect(visible.last()).toHaveAttribute("src", /seattle-scene-lake/);
+  await expect.poll(() => visible.last().evaluate(async image => {
+    await (image as HTMLImageElement).decode();
+    const landscape = image.parentElement!;
+    const stage = landscape.closest(".road-stage")!;
+    const pencil = stage.querySelector<SVGElement>(".travel-pencil")!;
+    const maskFront = parseFloat((image as HTMLElement).style.getPropertyValue("--front")) / 100;
+    return Math.abs(parseFloat(pencil.style.left) - (parseFloat(landscape.style.left) + parseFloat(landscape.style.width) * maskFront));
+  })).toBeLessThan(1);
+  await atStop(page, "seattle", 5.90);
+  await expect(visible).toHaveCount(5);
+  await expect(page.locator(".road-plane")).toBeHidden();
+  await atStop(page, "seattle", 6.70);
+  await expect(page.locator(".road-plane")).toBeVisible();
+  await expect(page.locator(".seattle-landscape")).not.toHaveCSS("clip-path", "inset(0px 0px 0px 0%)");
+  await atStop(page, "seattle", 2.95);
+  await expect(visible).toHaveCount(3);
+  await expect(page.locator(".road-plane")).toBeHidden();
+  await atStop(page, "charleston", 5.84);
+  await expect(layers(page, "charleston").last()).toHaveAttribute("src", /charleston-scene-civic/);
+  await atStop(page, "charleston", 7.10);
+  await expect(layers(page, "charleston").last()).toHaveAttribute("src", /charleston-scene-field/);
 });

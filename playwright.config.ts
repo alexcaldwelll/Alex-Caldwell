@@ -1,7 +1,6 @@
 import { defineConfig } from '@playwright/test';
 
-// Functional CI coverage uses installed Chromium + explicit software WebGL.
-// The hardware/Chrome/private-R3F diagnostic has its own opt-in config.
+// Portable browser coverage uses Playwright Chromium. Installed Chrome checks run separately.
 export default defineConfig({
   testDir: 'tests/e2e',
   testMatch: '**/*.spec.ts',
@@ -21,7 +20,6 @@ export default defineConfig({
     viewport: { width: 1440, height: 1000 },
     reducedMotion: 'no-preference',
     screenshot: 'only-on-failure',
-    launchOptions: { args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'] },
   },
   reporter: 'list',
 });

@@ -1,5 +1,13 @@
 # Scene artwork provenance
 
+## Current road journey
+
+The 20 WebP files under `src/assets/road/` are compressed copies of the original OpenAI-generated layers reviewed in the Alexandra draft on November 10, 2026. They are aligned by city so the pencil can reveal each memory in a shared landscape. Seattle’s final pitch retains the nighttime floodlights and younger players. Charleston’s final pitch uses daylight, the white Civic, and opposing goals. Washington’s field includes the GW athletics mark supplied by the site owner, and its clinic layer replaces the field while retaining the DC landscape. Nashville’s Broadway layer deliberately ends in graphite. The source portrait used for concept work is outside the repository. [GW mark reference](https://communications.gwu.edu/sites/g/files/zaxdzs7196/files/2024-04/athletics-logo-examples-gw_0.jpg)
+
+## Earlier Three.js prototype
+
+The following notes and measurements document the earlier geometry pass. Its six original posters were superseded by the road layers and remain in Git history.
+
 Generated 2026-11-06 with OpenAI image generation. Original AI-generated interpretive artwork, not documentary images or copied reference-site assets. Compression only; no semantic editing.
 
 ## opening

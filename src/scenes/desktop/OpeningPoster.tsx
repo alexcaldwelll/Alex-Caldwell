@@ -1,13 +1,19 @@
-import openingPoster from "../../assets/scenes/opening.webp";
+import openingPoster from "../../assets/road/seattle-scene-road.webp";
+import { RoadPencil } from "../shared/RoadPencil";
 
 export function OpeningPoster() {
   return (
-    <img
-      src={openingPoster}
-      alt="An oversized yellow pencil with a pink eraser on an open cream page"
-      width="1672"
-      height="941"
-      fetchPriority="high"
-    />
+    <div className="road-opening">
+      <div className="opening-road">
+        <img
+          src={openingPoster}
+          alt="A yellow pencil points along an empty road."
+          width="1279"
+          height="853"
+          fetchPriority="high"
+        />
+        <RoadPencil className="travel-pencil opening-pencil" />
+      </div>
+    </div>
   );
 }

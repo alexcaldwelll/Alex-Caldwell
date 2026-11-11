@@ -1,8 +1,8 @@
-import seattle from "../../assets/scenes/seattle.webp";
-import charleston from "../../assets/scenes/charleston.webp";
-import dc from "../../assets/scenes/dc.webp";
-import nashville from "../../assets/scenes/nashville.webp";
-import future from "../../assets/scenes/future.webp";
+import seattle from "../../assets/road/seattle-scene-field.webp";
+import charleston from "../../assets/road/charleston-scene-field.webp";
+import dc from "../../assets/road/dc-scene-church.webp";
+import nashville from "../../assets/road/nashville-scene-campus.webp";
+import future from "../../assets/road/nashville-scene-broadway.webp";
 
 export type StoryChapter = {
   id: "seattle" | "charleston" | "dc" | "nashville" | "future";
@@ -25,8 +25,8 @@ export const STORY_CHAPTERS: readonly StoryChapter[] = [
     progressEnd: 0.2,
     faithVisible: false,
     poster: seattle,
-    posterWidth: 1536,
-    posterHeight: 1024,
+    posterWidth: 1279,
+    posterHeight: 853,
     landmarks: [
       "evergreen trees",
       "Space Needle",
@@ -34,8 +34,7 @@ export const STORY_CHAPTERS: readonly StoryChapter[] = [
       "high-dive platform",
       "Mount Rainier",
     ],
-    imageDescription:
-      "An interpretive Seattle memory scene with evergreens, the Space Needle, a lake and Mount Rainier.",
+    imageDescription: "Evergreens line the road below the Space Needle and Lake Washington. A floodlit youth soccer game is visible across the road.",
   },
   {
     id: "charleston",
@@ -44,8 +43,8 @@ export const STORY_CHAPTERS: readonly StoryChapter[] = [
     progressEnd: 0.4,
     faithVisible: false,
     poster: charleston,
-    posterWidth: 1672,
-    posterHeight: 941,
+    posterWidth: 1279,
+    posterHeight: 853,
     landmarks: [
       "palm trees",
       "ocean",
@@ -54,8 +53,7 @@ export const STORY_CHAPTERS: readonly StoryChapter[] = [
       "Florida tournament",
       "college coaches",
     ],
-    imageDescription:
-      "An interpretive coastal Charleston scene connecting palm trees, ocean, soccer and travel.",
+    imageDescription: "Palmettos, ocean and the Ravenel Bridge flank a road with a white Civic and a grass soccer field.",
   },
   {
     id: "dc",
@@ -64,8 +62,8 @@ export const STORY_CHAPTERS: readonly StoryChapter[] = [
     progressEnd: 0.6,
     faithVisible: true,
     poster: dc,
-    posterWidth: 1672,
-    posterHeight: 941,
+    posterWidth: 1279,
+    posterHeight: 853,
     landmarks: [
       "George Washington University soccer field",
       "Washington Monument",
@@ -73,8 +71,7 @@ export const STORY_CHAPTERS: readonly StoryChapter[] = [
       "ball on old route",
       "St. Patrick’s Church",
     ],
-    imageDescription:
-      "An interpretive Washington, DC scene: the road branches away from soccer toward St. Patrick’s Church and a small golden light.",
+    imageDescription: "Cherry blossoms frame the Washington Monument and Capitol. The GW turf field sits in front of St. Patrick’s Church.",
   },
   {
     id: "nashville",
@@ -83,8 +80,8 @@ export const STORY_CHAPTERS: readonly StoryChapter[] = [
     progressEnd: 0.8,
     faithVisible: true,
     poster: nashville,
-    posterWidth: 1568,
-    posterHeight: 1003,
+    posterWidth: 1279,
+    posterHeight: 853,
     landmarks: [
       "Vanderbilt University",
       "running",
@@ -92,8 +89,7 @@ export const STORY_CHAPTERS: readonly StoryChapter[] = [
       "music",
       "Church of the Immaculate Conception",
     ],
-    imageDescription:
-      "An interpretive Nashville scene bringing together Vanderbilt, running, food, music and church, accompanied by golden light.",
+    imageDescription: "Vanderbilt’s brick clock tower and campus stand among mature trees.",
   },
   {
     id: "future",
@@ -102,10 +98,9 @@ export const STORY_CHAPTERS: readonly StoryChapter[] = [
     progressEnd: 1,
     faithVisible: true,
     poster: future,
-    posterWidth: 1672,
-    posterHeight: 941,
+    posterWidth: 1279,
+    posterHeight: 853,
     landmarks: ["open page", "partial graphite sketches", "golden light"],
-    imageDescription:
-      "A pencil continues into an open page with partially drawn possibilities and a continuing golden light.",
+    imageDescription: "Broadway storefronts shift from finished color to unfinished graphite.",
   },
 ];

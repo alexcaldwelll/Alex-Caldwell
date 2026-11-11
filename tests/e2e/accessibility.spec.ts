@@ -32,7 +32,7 @@ test('real HTML without JavaScript includes the story, index and valid reader', 
   await page.goto(baseURL!);
   await expect(page.getByRole('heading', { level: 1, name: 'Alexandra’s story' })).toHaveCount(1);
   await expect(page.locator('.static-journey h2')).toHaveCount(5);
-  await expect(page.locator('.chapter-poster')).toHaveCount(5);
+  await expect(page.locator('.chapter-poster')).toHaveCount(6);
   await page.getByRole('navigation').getByRole('link', { name: 'Blog' }).click();
   await expect(page.getByRole('heading', { name: 'Blog', exact: true })).toBeVisible();
   await page.getByRole('link', { name: 'A first note — sample post' }).click();

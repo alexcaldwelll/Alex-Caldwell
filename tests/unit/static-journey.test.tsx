@@ -6,7 +6,7 @@ afterEach(cleanup);
 it('renders all chapters in order with accessible local posters and no canvas', () => {
   const { container } = render(<StaticJourney />);
   expect(screen.getAllByRole('heading', { level: 2 }).map(node => node.textContent)).toEqual(['Seattle', 'Charleston', 'Washington, DC', 'Nashville', 'The unfinished future']);
-  expect(screen.getAllByRole('img')).toHaveLength(5);
+  expect(screen.getAllByRole('img')).toHaveLength(6);
   expect(container.querySelector('canvas')).toBeNull();
   expect(container.querySelector('.story-chapter p')).toBeNull();
   expect(container.querySelectorAll('[data-faith-visible="true"]')).toHaveLength(3);

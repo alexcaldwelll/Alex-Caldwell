@@ -1,77 +1,165 @@
 {
   "assets": [
     {
-      "path": "src/assets/scenes/opening.webp",
+      "path": "src/assets/road/charleston-scene-bridge.webp",
       "origin": "generated",
-      "source": "OpenAI image generation 2026-11-06; original exec-806133ea-8c24-41b6-bffc-31e1b1dab89e.png; details in src/assets/scenes/README.md",
-      "license": "Original AI-generated artwork; OpenAI output terms; no third-party source assets"
+      "source": "OpenAI image generation, 2026-11-10; approved Alexandra draft layer; see src/assets/scenes/README.md",
+      "license": "Original AI-generated artwork; OpenAI output terms"
     },
     {
-      "path": "src/assets/scenes/seattle.webp",
+      "path": "src/assets/road/charleston-scene-civic.webp",
       "origin": "generated",
-      "source": "OpenAI image generation 2026-11-06; original exec-bee8163e-1cc2-43f6-b064-dfccfb928976.png; details in src/assets/scenes/README.md",
-      "license": "Original AI-generated artwork; OpenAI output terms; no third-party source assets"
+      "source": "OpenAI image generation, 2026-11-10; approved Alexandra draft layer; see src/assets/scenes/README.md",
+      "license": "Original AI-generated artwork; OpenAI output terms"
     },
     {
-      "path": "src/assets/scenes/charleston.webp",
+      "path": "src/assets/road/charleston-scene-field.webp",
       "origin": "generated",
-      "source": "OpenAI image generation 2026-11-06; original exec-3913dd08-defd-4a0d-a476-cda627a7bfe2.png; details in src/assets/scenes/README.md",
-      "license": "Original AI-generated artwork; OpenAI output terms; no third-party source assets"
+      "source": "OpenAI image generation, 2026-11-10; approved Alexandra draft layer; see src/assets/scenes/README.md",
+      "license": "Original AI-generated artwork; OpenAI output terms"
     },
     {
-      "path": "src/assets/scenes/dc.webp",
+      "path": "src/assets/road/charleston-scene-ocean.webp",
       "origin": "generated",
-      "source": "OpenAI image generation 2026-11-06; original exec-4cfe89ea-5d9d-4d5f-af1d-e81408fcaad8.png; details in src/assets/scenes/README.md",
-      "license": "Original AI-generated artwork; OpenAI output terms; no third-party source assets"
+      "source": "OpenAI image generation, 2026-11-10; approved Alexandra draft layer; see src/assets/scenes/README.md",
+      "license": "Original AI-generated artwork; OpenAI output terms"
     },
     {
-      "path": "src/assets/scenes/nashville.webp",
+      "path": "src/assets/road/charleston-scene-palms.webp",
       "origin": "generated",
-      "source": "OpenAI image generation 2026-11-06; original exec-bf65c077-57cc-4e73-be70-7f655e04a63e.png; details in src/assets/scenes/README.md",
-      "license": "Original AI-generated artwork; OpenAI output terms; no third-party source assets"
+      "source": "OpenAI image generation, 2026-11-10; approved Alexandra draft layer; see src/assets/scenes/README.md",
+      "license": "Original AI-generated artwork; OpenAI output terms"
     },
     {
-      "path": "src/assets/scenes/future.webp",
+      "path": "src/assets/road/charleston-scene-road.webp",
       "origin": "generated",
-      "source": "OpenAI image generation 2026-11-06; original exec-fd163c08-3ce7-4e79-931a-dcf6700265ee.png; details in src/assets/scenes/README.md",
-      "license": "Original AI-generated artwork; OpenAI output terms; no third-party source assets"
+      "source": "OpenAI image generation, 2026-11-10; approved Alexandra draft layer; see src/assets/scenes/README.md",
+      "license": "Original AI-generated artwork; OpenAI output terms"
+    },
+    {
+      "path": "src/assets/road/dc-scene-church-only.webp",
+      "origin": "generated",
+      "source": "OpenAI image generation, 2026-11-10; approved Alexandra draft layer; see src/assets/scenes/README.md",
+      "license": "Original AI-generated artwork; OpenAI output terms"
+    },
+    {
+      "path": "src/assets/road/dc-scene-church.webp",
+      "origin": "generated",
+      "source": "OpenAI image generation, 2026-11-10; approved Alexandra draft layer; see src/assets/scenes/README.md; field mark reference provided by the site owner from GW Communications",
+      "license": "Original generated illustration; referenced GW marks remain the property of their owner"
+    },
+    {
+      "path": "src/assets/road/dc-scene-clinic.webp",
+      "origin": "generated",
+      "source": "OpenAI image generation, 2026-11-10; approved Alexandra draft layer; see src/assets/scenes/README.md; field mark reference provided by the site owner from GW Communications",
+      "license": "Original generated illustration; referenced GW marks remain the property of their owner"
+    },
+    {
+      "path": "src/assets/road/dc-scene-field.webp",
+      "origin": "generated",
+      "source": "OpenAI image generation, 2026-11-10; approved Alexandra draft layer; see src/assets/scenes/README.md; field mark reference provided by the site owner from GW Communications",
+      "license": "Original generated illustration; referenced GW marks remain the property of their owner"
+    },
+    {
+      "path": "src/assets/road/dc-scene-monument.webp",
+      "origin": "generated",
+      "source": "OpenAI image generation, 2026-11-10; approved Alexandra draft layer; see src/assets/scenes/README.md",
+      "license": "Original AI-generated artwork; OpenAI output terms"
+    },
+    {
+      "path": "src/assets/road/dc-scene-road.webp",
+      "origin": "generated",
+      "source": "OpenAI image generation, 2026-11-10; approved Alexandra draft layer; see src/assets/scenes/README.md",
+      "license": "Original AI-generated artwork; OpenAI output terms"
+    },
+    {
+      "path": "src/assets/road/nashville-scene-broadway.webp",
+      "origin": "generated",
+      "source": "OpenAI image generation, 2026-11-10; approved Alexandra draft layer; see src/assets/scenes/README.md",
+      "license": "Original AI-generated artwork; OpenAI output terms"
+    },
+    {
+      "path": "src/assets/road/nashville-scene-campus.webp",
+      "origin": "generated",
+      "source": "OpenAI image generation, 2026-11-10; approved Alexandra draft layer; see src/assets/scenes/README.md",
+      "license": "Original AI-generated artwork; OpenAI output terms"
+    },
+    {
+      "path": "src/assets/road/nashville-scene-road.webp",
+      "origin": "generated",
+      "source": "OpenAI image generation, 2026-11-10; approved Alexandra draft layer; see src/assets/scenes/README.md",
+      "license": "Original AI-generated artwork; OpenAI output terms"
+    },
+    {
+      "path": "src/assets/road/seattle-scene-field.webp",
+      "origin": "generated",
+      "source": "OpenAI image generation, 2026-11-10; approved Alexandra draft layer; see src/assets/scenes/README.md",
+      "license": "Original AI-generated artwork; OpenAI output terms"
+    },
+    {
+      "path": "src/assets/road/seattle-scene-lake.webp",
+      "origin": "generated",
+      "source": "OpenAI image generation, 2026-11-10; approved Alexandra draft layer; see src/assets/scenes/README.md",
+      "license": "Original AI-generated artwork; OpenAI output terms"
+    },
+    {
+      "path": "src/assets/road/seattle-scene-needle.webp",
+      "origin": "generated",
+      "source": "OpenAI image generation, 2026-11-10; approved Alexandra draft layer; see src/assets/scenes/README.md",
+      "license": "Original AI-generated artwork; OpenAI output terms"
+    },
+    {
+      "path": "src/assets/road/seattle-scene-road.webp",
+      "origin": "generated",
+      "source": "OpenAI image generation, 2026-11-10; approved Alexandra draft layer; see src/assets/scenes/README.md",
+      "license": "Original AI-generated artwork; OpenAI output terms"
+    },
+    {
+      "path": "src/assets/road/seattle-scene-trees.webp",
+      "origin": "generated",
+      "source": "OpenAI image generation, 2026-11-10; approved Alexandra draft layer; see src/assets/scenes/README.md",
+      "license": "Original AI-generated artwork; OpenAI output terms"
     }
   ],
   "scenes": [
     {
-      "id": "opening",
-      "files": [
-        "src/assets/scenes/opening.webp"
-      ]
-    },
-    {
       "id": "seattle",
       "files": [
-        "src/assets/scenes/seattle.webp"
+        "src/assets/road/seattle-scene-field.webp",
+        "src/assets/road/seattle-scene-lake.webp",
+        "src/assets/road/seattle-scene-needle.webp",
+        "src/assets/road/seattle-scene-road.webp",
+        "src/assets/road/seattle-scene-trees.webp"
       ]
     },
     {
       "id": "charleston",
       "files": [
-        "src/assets/scenes/charleston.webp"
+        "src/assets/road/charleston-scene-bridge.webp",
+        "src/assets/road/charleston-scene-civic.webp",
+        "src/assets/road/charleston-scene-field.webp",
+        "src/assets/road/charleston-scene-ocean.webp",
+        "src/assets/road/charleston-scene-palms.webp",
+        "src/assets/road/charleston-scene-road.webp"
       ]
     },
     {
       "id": "dc",
       "files": [
-        "src/assets/scenes/dc.webp"
+        "src/assets/road/dc-scene-church-only.webp",
+        "src/assets/road/dc-scene-church.webp",
+        "src/assets/road/dc-scene-clinic.webp",
+        "src/assets/road/dc-scene-field.webp",
+        "src/assets/road/dc-scene-monument.webp",
+        "src/assets/road/dc-scene-road.webp"
       ]
     },
     {
       "id": "nashville",
       "files": [
-        "src/assets/scenes/nashville.webp"
-      ]
-    },
-    {
-      "id": "future",
-      "files": [
-        "src/assets/scenes/future.webp"
+        "src/assets/road/nashville-scene-broadway.webp",
+        "src/assets/road/nashville-scene-campus.webp",
+        "src/assets/road/nashville-scene-road.webp"
       ]
     }
   ]

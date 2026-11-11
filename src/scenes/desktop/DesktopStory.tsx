@@ -12,7 +12,7 @@ import {
 import { OpeningPoster } from "./OpeningPoster";
 import type { StoryCanvasProps } from "./StoryCanvas";
 import type { SceneProgressProps } from "./route";
-import "./desktop-story.css";
+import "../shared/road-journey.css";
 
 export const DESKTOP_STORY_QUERY =
   "(min-width: 64rem) and (pointer: fine) and (hover: hover)";

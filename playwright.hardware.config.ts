@@ -1,7 +1,6 @@
 import { defineConfig } from '@playwright/test';
 
-// Local development diagnostic: actual installed Chrome, hardware WebGL,
-// Vite development modules/private R3F internals, externally managed server.
+// Optional local composition check in installed Chrome against an externally managed server.
 export default defineConfig({
   testDir: 'tests/e2e',
   testMatch: '**/hardware-diagnostic.spec.ts',
