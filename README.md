@@ -26,7 +26,7 @@ npx playwright install --with-deps chromium
 npm run test:e2e
 ```
 
-The build emits complete HTML for `/`, `/blog`, and every valid Markdown post, listed in `dist/prerender-paths.json`. It then removes its temporary server bundle. `dist/` is generated and never committed. Production checks serve the actual built HTML on an isolated temporary port and verify no-JavaScript reading, initial styles, delayed hydration, and literal authored dollar sequences.
+The build emits complete HTML for `/`, `/blog`, and every valid Markdown post, listed in `dist/prerender-paths.json`. It then removes its temporary server bundle. `dist/` is generated and excluded from source commits. GitHub Pages publishes a copy of its contents on the `gh-pages` branch. Production checks serve the actual built HTML on an isolated temporary port and verify no-JavaScript reading, initial styles, delayed hydration, and literal authored dollar sequences.
 
 The default browser suite starts Vite on port **5188** and checks the real drawing edge, scroll order and reversal, inter-city flights, clinic replacement, unfinished ending, and static fallback. The optional installed-Chrome check samples the final city compositions at 1440 and 1024 pixels.
 
