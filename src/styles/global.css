@@ -1,0 +1,112 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  color: var(--color-ink);
+  background: var(--color-cream);
+  font-family: var(--font-body);
+  line-height: 1.5;
+}
+
+a {
+  color: inherit;
+  text-underline-offset: 0.25em;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 5px;
+  border-radius: 2px;
+  background: var(--color-blush);
+}
+
+.app-shell {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--page-gutter);
+}
+
+.site-brand {
+  font-family: var(--font-title);
+  font-size: 1.5rem;
+  text-decoration: none;
+}
+
+.site-header nav {
+  display: flex;
+  gap: clamp(1rem, 3vw, 2rem);
+}
+
+.site-header nav a {
+  display: inline-block;
+  padding-block: var(--space-sm);
+  text-decoration: none;
+}
+
+.site-header nav a:hover {
+  text-decoration: underline;
+}
+
+main {
+  flex: 1;
+}
+
+.site-header nav a[aria-current="page"] {
+  text-decoration: underline;
+}
+
+.not-found {
+  padding: var(--space-md) var(--page-gutter);
+}
+
+@media (max-width: 24rem) {
+  .site-header {
+    flex-wrap: wrap;
+  }
+}
+
+.sr-only, .skip-link:not(:focus) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.skip-link:focus {
+  position: fixed;
+  top: 1rem;
+  left: var(--page-gutter);
+  z-index: 10;
+  padding: 0.75rem 1rem;
+  background: var(--color-cream);
+}
+main:focus { outline: none; background: transparent; }
+h1, h2, h3 { font-family: var(--font-title); }
+::view-transition-group(.page-fade),
+::view-transition-group(.content-reveal) { animation: none; }
+::view-transition-old(.page-fade),
+::view-transition-old(.content-reveal) { animation: editorial-out 180ms ease both; }
+::view-transition-new(.page-fade),
+::view-transition-new(.content-reveal) { animation: editorial-in 180ms ease both; }
+::view-transition-group(.post-continuity) { animation-duration: 240ms; animation-timing-function: ease-out; }
+@keyframes editorial-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes editorial-out { from { opacity: 1; } to { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; }
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) {
+    animation: none !important;
+  }
+}

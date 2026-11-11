@@ -1,0 +1,65 @@
+.desktop-scene {
+  position: relative;
+  width: 100%;
+  height: calc(100svh - 6.75rem);
+  min-height: 28rem;
+  display: grid;
+  place-items: center;
+}
+.desktop-canvas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.desktop-canvas canvas {
+  display: block;
+}
+.story-opening:has(.cinematic-journey) {
+  display: block;
+  overflow: visible;
+}
+.cinematic-journey {
+  position: relative;
+  height: 1800svh;
+  width: 100%;
+}
+.story-stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+}
+.cinematic-journey .desktop-scene {
+  height: 100svh;
+}
+.cinematic-travel {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.cinematic-location {
+  position: absolute;
+  top: clamp(2rem, 7vh, 5rem);
+  left: var(--page-gutter);
+  color: var(--color-ink);
+  opacity: 0;
+  font-family: var(--font-title);
+  font-size: clamp(1.5rem, 2.8vw, 2.75rem);
+  letter-spacing: -0.035em;
+}
+.cinematic-plane {
+  position: absolute;
+  top: 40%;
+  left: -8rem;
+  width: clamp(3.5rem, 7vw, 7rem);
+  opacity: 0;
+  fill: var(--color-ink);
+}
+.story-opening:has(.cinematic-journey) + .static-journey {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  padding: 0;
+}

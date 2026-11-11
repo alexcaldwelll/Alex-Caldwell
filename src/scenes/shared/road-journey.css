@@ -1,0 +1,132 @@
+.story-opening:has(.road-world) {
+  display: block;
+  overflow: visible;
+}
+.road-opening {
+  position: relative;
+  min-height: calc(100svh - 6rem);
+  width: 100%;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  background: var(--color-cream);
+}
+.opening-road {
+  position: relative;
+  width: max(100%, calc((100svh - 6rem) * 1.5));
+  aspect-ratio: 3 / 2;
+}
+.opening-road img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.travel-pencil {
+  position: absolute;
+  z-index: 3;
+  width: clamp(77px, 13vw, 174px);
+  height: auto;
+  transform-origin: right center;
+  pointer-events: none;
+  filter: drop-shadow(1px 4px 2px #624c3045);
+}
+.opening-pencil {
+  left: 56.9%;
+  top: 76%;
+  transform: translate(-100%, -50%) rotate(-73deg);
+}
+.road-world {
+  position: relative;
+  width: 100%;
+  height: var(--story-height);
+}
+.road-stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--color-cream);
+}
+.road-stage canvas, .road-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.road-art {
+  z-index: 1;
+  pointer-events: none;
+}
+.road-location {
+  position: absolute;
+  z-index: 2;
+  left: var(--page-gutter);
+  top: 1rem;
+  margin: 0;
+  color: #fff3de;
+  text-shadow: 0 1px 7px #302619;
+  font-family: var(--font-title);
+  font-size: clamp(1.5rem, 3vw, 2.4rem);
+}
+.road-cities {
+  position: absolute;
+  z-index: 5;
+  right: var(--page-gutter);
+  top: 1.35rem;
+  display: flex;
+  gap: clamp(.8rem, 2vw, 2rem);
+  padding: .45rem .8rem;
+  background: #faf6eedd;
+  border-radius: 2px;
+  font-size: .82rem;
+}
+.road-cities a { text-decoration: none; }
+.road-cities a[aria-current], .road-cities a:hover { text-decoration: underline; }
+.city-landscape {
+  position: absolute;
+  overflow: hidden;
+  isolation: isolate;
+}
+.city-landscape img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.city-landscape img:not(:first-child) {
+  mask-image: linear-gradient(to right, #000 0%, #000 calc(var(--front, 0%) - 1.5%), transparent var(--front, 0%));
+}
+.road-stage [hidden] { display: none; }
+.road-plane {
+  position: absolute;
+  z-index: 4;
+  top: 29%;
+  width: clamp(45px, 6vw, 92px);
+  fill: #39312c;
+  transform: translate(-50%, -50%) rotate(-11deg);
+}
+.landscape-survivor {
+  position: absolute;
+  right: 4%;
+  top: 9%;
+  width: min(65vw, 870px);
+  max-height: 68svh;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  mask-image: radial-gradient(ellipse at center, #000 53%, transparent 77%);
+}
+.story-opening:has(.road-world) + .static-journey {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  padding: 0;
+}
+@media (max-width: 63.99rem), (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .road-opening { min-height: 0; }
+  .opening-road { width: 100%; }
+}
