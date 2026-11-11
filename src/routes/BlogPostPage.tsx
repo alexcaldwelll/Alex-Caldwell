@@ -1,3 +1,4 @@
+import { sitePath } from '../sitePath';
 import { PostContinuity } from '../components/RouteTransition';
 import { Link, useParams } from 'react-router-dom';
 import { getPostBySlug } from '../content/posts';
@@ -13,7 +14,7 @@ export function BlogPostPage() {
     <header><PostDate date={post.date} /><PostContinuity slug={post.slug} part="title"><h1>{post.title}</h1></PostContinuity><p className="blog-excerpt">{post.excerpt}</p>
       {post.tags?.length ? <ul className="blog-tags" aria-label="Tags">{post.tags.map(tag => <li key={tag}>{tag}</li>)}</ul> : null}
     </header>
-    {post.coverImage && <PostContinuity slug={post.slug} part="cover"><img className="blog-cover" src={post.coverImage} alt="" /></PostContinuity>}
+    {post.coverImage && <PostContinuity slug={post.slug} part="cover"><img className="blog-cover" src={sitePath(post.coverImage)} alt="" /></PostContinuity>}
     <MarkdownContent content={post.content} />
   </article>;
 }

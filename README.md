@@ -77,7 +77,9 @@ The 20 staged WebP files total **2,748,690 bytes**. The opening road is 59,978 b
 
 `check:bundles` follows the production manifest’s static imports, counts shared files once per group, and measures Node zlib gzip at level 6. Dynamic route groups remain separate. It also checks total emitted JS and CSS.
 
-## GitHub and Vercel
+## GitHub Pages and Vercel
+
+The GitHub Pages site is published from the generated files on the `gh-pages` branch. Build the reviewed source revision with `VITE_BASE_PATH=/Alex-Caldwell/ npm run build`. The environment variable gives the client, prerendered pages, and media the same repository path. Publish the contents of `dist/` at the branch root with an empty `.nojekyll` file. [Public website](https://alexcaldwelll.github.io/Alex-Caldwell/)
 
 Push reviewed work to a feature branch and open a pull request. GitHub Actions runs lockfile installation, lint, strict types, unit tests, asset checks, the production build, bundle budgets and portable Chromium checks. The workflow uses read-only repository access, pinned official actions and Node 24.
 
@@ -91,7 +93,7 @@ Once Vercel is connected, feature branch commits can produce previews and commit
 DEPLOYMENT_URL=https://your-preview.vercel.app npm run test:e2e -- tests/e2e/deployment-smoke.spec.ts
 ```
 
-The hosted test checks Home's opening poster and story, the Blog index and a linked post with JavaScript disabled. It skips when `DEPLOYMENT_URL` is unset. The current release candidate has local production coverage and awaits hosted verification.
+The hosted test checks Home's opening poster and story, the Blog index and a linked post with JavaScript disabled. It skips when `DEPLOYMENT_URL` is unset. Run the same test against GitHub Pages with its full project URL.
 
 The live dependency audit currently reports a development-only minimatch advisory ([GHSA-g3hv-75wg-m249](https://github.com/advisories/GHSA-g3hv-75wg-m249)) through the lint stack. The reviewed advisory affects versions `>=7.0.0 <11.0.1`; npm's latest 10.x is 10.2.6, while upstream lint packages require 10.x. No compatible patched backport was available at verification. Current lint globs are repository-authored constants; minimatch is absent from the shipped browser bundles. A major transitive override has not been forced. Recheck upstream support before release.
 

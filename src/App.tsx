@@ -5,5 +5,5 @@ const BlogPage = lazy(() => import('./routes/BlogPage').then(module => ({ defaul
 const BlogPostPage = lazy(() => import('./routes/BlogPostPage').then(module => ({ default: module.BlogPostPage })));
 
 export function App() {
-  return <BrowserRouter><AppLayout pages={{ BlogPage, BlogPostPage }} /></BrowserRouter>;
+  return <BrowserRouter basename={import.meta.env.BASE_URL}><AppLayout pages={{ BlogPage, BlogPostPage }} /></BrowserRouter>;
 }

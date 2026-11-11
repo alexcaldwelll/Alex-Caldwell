@@ -9,6 +9,7 @@ import { AppLayout } from './AppLayout';
 import { getAllPosts } from './content/posts';
 
 export const prerenderPaths = () => ['/', '/blog', ...getAllPosts().map(post => `/blog/${post.slug}`)];
+export const siteBase = import.meta.env.BASE_URL;
 
 export function render(url: string): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -18,7 +19,7 @@ export function render(url: string): Promise<string> {
     output.on('data', chunk => { html += chunk; });
     output.on('end', () => resolve(html));
     output.on('error', reject);
-    const stream = renderToPipeableStream(<StrictMode><StaticRouter location={url}><AppLayout pages={{ BlogPage, BlogPostPage }} /></StaticRouter></StrictMode>, {
+    const stream = renderToPipeableStream(<StrictMode><StaticRouter basename={siteBase} location={url}><AppLayout pages={{ BlogPage, BlogPostPage }} /></StaticRouter></StrictMode>, {
       // Do not pipe the shell: no fallback or streaming replacement scripts in static HTML.
       onAllReady() { stream.pipe(output); },
       onShellError: reject,

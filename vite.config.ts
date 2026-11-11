@@ -4,6 +4,7 @@ import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
+  base: process.env.VITE_BASE_PATH || '/',
   plugins: [react(), {
     name: 'preview-prerendered-pages',
     configurePreviewServer({ config, middlewares }) {
@@ -12,7 +13,8 @@ export default defineConfig({
         if (request.url && (request.method === 'GET' || request.method === 'HEAD')) {
           const { pathname, search } = new URL(request.url, 'http://localhost');
           // Serve directory indexes at the public, slashless URL before Vite's SPA fallback.
-          if (/^\/blog(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)?$/.test(pathname) && existsSync(resolve(output, `.${pathname}/index.html`))) {
+          const route = pathname.startsWith(config.base) ? '/' + pathname.slice(config.base.length) : '';
+          if (/^\/blog(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)?$/.test(route) && existsSync(resolve(output, `.${route}/index.html`))) {
             request.url = `${pathname}/index.html${search}`;
           }
         }
